@@ -121,7 +121,7 @@
       }
     }
 
-    async function generatePDF() {
+    window.generatePDF = async function () {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       doc.addFont("Amiri-Regular", "Amiri", "normal");
@@ -129,7 +129,6 @@
       doc.setFontSize(22);
       let y = 25;
 
-      // العنوان الرئيسي
       doc.text("ملف إنجاز", 105, y, { align: "center" });
       y += 15;
 
@@ -146,13 +145,11 @@
           const x = 15 + (i % 3) * 60;
           if (i > 0 && i % 3 === 0) y += 80;
 
-          // خلفية بني فاتح
           doc.setFillColor(205, 170, 125);
           doc.rect(x - 5, y - 5, 55, 70, 'F');
 
           doc.addImage(images[i].data, 'JPEG', x, y, 45, 45);
 
-          // QR Code تحت الصورة
           const qrCanvas = document.createElement('canvas');
           await QRCode.toCanvas(qrCanvas, images[i].name);
           const qrData = qrCanvas.toDataURL("image/png");
@@ -167,7 +164,6 @@
         }
       }
 
-      // QR النهائي في آخر الصفحة
       doc.addPage();
       doc.setFontSize(16);
       doc.text("ملف الإنجاز النهائي", 105, 30, { align: "center" });
@@ -178,7 +174,7 @@
       doc.addImage(finalQRData, 'PNG', 90, 40, 30, 30);
 
       doc.save("ملف_إنجاز.pdf");
-    }
+    };
   </script>
 </body>
 </html>
