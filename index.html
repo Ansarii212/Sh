@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>نموذج الأدلة</title>
+  <title>نموذج تقييم الأدلة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     body {
@@ -39,16 +39,16 @@
       align-items: center;
       margin: 10px 0;
     }
+    .input-row input[type="file"] {
+      margin-left: 10px;
+    }
     .input-row input[type="text"] {
       flex: 1;
       padding: 10px;
       font-size: 16px;
-      margin-right: 10px;
       border: 1px solid #ccc;
       border-radius: 6px;
-    }
-    .input-row input[type="file"] {
-      padding: 5px;
+      min-width: 250px;
     }
     .preview {
       font-size: 14px;
@@ -73,37 +73,42 @@
 <body>
   <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
-  <!-- بند واحد كمثال -->
-  <div class="container">
-    <details open>
-      <summary>البند رقم 1</summary>
-      <p class="description">شرح توضيحي للبند 1.</p>
-      <div class="input-row">
-        <input type="file" accept="image/*" onchange="handleImage(this)" />
-        <input type="text" placeholder="ملاحظة 1" />
-      </div>
-      <div class="preview"></div>
-      <div class="input-row">
-        <input type="file" accept="image/*" onchange="handleImage(this)" />
-        <input type="text" placeholder="ملاحظة 2" />
-      </div>
-      <div class="preview"></div>
-      <div class="input-row">
-        <input type="file" accept="image/*" onchange="handleImage(this)" />
-        <input type="text" placeholder="ملاحظة 3" />
-      </div>
-      <div class="preview"></div>
-    </details>
-  </div>
+  <!-- 11 قوائم منسدلة -->
+  <div id="form-area"></div>
 
   <div style="text-align:center;">
     <button onclick="generatePDF()">توليد ملف PDF</button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
   <script>
+    const formArea = document.getElementById('form-area');
     const uploadedImages = [];
+
+    for (let i = 1; i <= 11; i++) {
+      const details = document.createElement('div');
+      details.className = 'container';
+      details.innerHTML = `
+        <details>
+          <summary>البند رقم ${i}</summary>
+          <p class="description">شرح توضيحي للبند ${i}.</p>
+          ${generateInputRow()}
+          ${generateInputRow()}
+          ${generateInputRow()}
+        </details>
+      `;
+      formArea.appendChild(details);
+    }
+
+    function generateInputRow() {
+      return `
+        <div class="input-row">
+          <input type="file" accept="image/*" onchange="handleImage(this)" />
+          <input type="text" placeholder="ملاحظة" />
+        </div>
+        <div class="preview"></div>
+      `;
+    }
 
     function handleImage(input) {
       const file = input.files[0];
@@ -123,6 +128,11 @@
       const doc = new jsPDF();
       let y = 20;
 
+      if (uploadedImages.length === 0) {
+        alert("يرجى رفع صورة واحدة على الأقل.");
+        return;
+      }
+
       for (let i = 0; i < uploadedImages.length; i++) {
         doc.text(`الصورة رقم ${i + 1}: ${uploadedImages[i].name}`, 10, y);
         y += 10;
@@ -132,11 +142,6 @@
           doc.addPage();
           y = 20;
         }
-      }
-
-      if (uploadedImages.length === 0) {
-        alert("يرجى رفع صورة واحدة على الأقل.");
-        return;
       }
 
       doc.save("report.pdf");
