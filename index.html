@@ -1,178 +1,158 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>ملف الإنجاز</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <meta charset="UTF-8" />
+  <title>نموذج تقييم الأدلة</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #fdf7f0;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
       padding: 20px;
       direction: rtl;
     }
-    .section {
-      border: 2px solid #a67c52;
-      border-radius: 12px;
-      padding: 15px;
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
       margin-bottom: 20px;
-      background-color: #fff8f0;
     }
-    .dropdown {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      background-color: #fffaf4;
-      border: 1px solid #d9bfa3;
-      border-radius: 5px;
-    }
-    .desc {
-      margin: 10px 0;
-      color: #5a4632;
-    }
-    .upload-group {
-      display: flex;
-      gap: 10px;
+    details {
+      background: #fff7e6;
+      border: 2px dashed #f1a00d;
+      border-radius: 10px;
+      padding: 15px;
       margin-bottom: 10px;
     }
-    .upload-group input[type="text"] {
-      flex: 1;
-      padding: 5px;
-    }
-    .upload-group input[type="file"] {
-      width: 120px;
-    }
-    .btn {
-      margin: 5px;
-      padding: 10px 15px;
-      background-color: #a67c52;
-      color: white;
-      border: none;
-      border-radius: 5px;
+    summary {
+      font-size: 20px;
+      font-weight: bold;
       cursor: pointer;
     }
-    .btn:hover {
-      background-color: #8b6543;
+    .input-row {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
     }
-    #qrCanvas {
+    .input-row input[type="file"] {
+      margin-left: 10px;
+    }
+    .preview {
+      font-size: 14px;
+      color: green;
+      margin-top: 5px;
+    }
+    button {
+      background-color: #ff9900;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
       margin-top: 20px;
+    }
+    button:hover {
+      background-color: #e68a00;
     }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center;">ملف الإنجاز</h1>
-  <label>رقم الجوال:</label>
-  <input type="text" id="phone" style="width: 100%; padding: 8px; margin-bottom: 20px;" placeholder="05XXXXXXXX">
+  <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
-  <div id="sections-container"></div>
+  <div id="form-area"></div>
 
-  <button class="btn" onclick="generateHTMLPage()">توليد صفحة الإنجاز</button>
-  <button class="btn" onclick="window.print()">طباعة</button>
-  <button class="btn" onclick="sharePage()">مشاركة</button>
+  <div style="text-align:center;">
+    <button onclick="openReport()">عرض التقرير</button>
+  </div>
 
-  <div id="resultLink" style="margin-top: 20px;"></div>
-  <canvas id="qrCanvas"></canvas>
-
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCr4T8GLRxtf_6LNrokjKvmBOwSkuGO5yQ",
-      authDomain: "hamsa-6009e.firebaseapp.com",
-      databaseURL: "https://hamsa-6009e-default-rtdb.firebaseio.com",
-      projectId: "hamsa-6009e",
-      storageBucket: "hamsa-6009e.firebasestorage.app",
-      messagingSenderId: "998163671039",
-      appId: "1:998163671039:web:d1930ea5b71a3a3fc729ca",
-      measurementId: "G-PD1QB8X0FE"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    const formArea = document.getElementById('form-area');
+    const uploadedImages = {};
 
-    const titles = [
-      "الدرس الأول", "الدرس الثاني", "الدرس الثالث", "الدرس الرابع",
-      "الدرس الخامس", "الدرس السادس", "الدرس السابع", "الدرس الثامن",
-      "الدرس التاسع", "الدرس العاشر", "الدرس الحادي عشر"
-    ];
+    for (let i = 1; i <= 11; i++) {
+      const sectionTitle = `البند رقم ${i}`;
+      uploadedImages[sectionTitle] = [];
 
-    const sectionsContainer = document.getElementById("sections-container");
-
-    titles.forEach((title, index) => {
-      const section = document.createElement("div");
-      section.className = "section";
-      section.innerHTML = `
-        <select class="dropdown">
-          <option>${title}</option>
-        </select>
-        <div class="desc">شرح نصي للدرس.</div>
-        <div class="upload-group">
-          <input type="text" placeholder="اسم الصورة 1">
-          <input type="file" accept="image/*">
-        </div>
-        <div class="upload-group">
-          <input type="text" placeholder="اسم الصورة 2">
-          <input type="file" accept="image/*">
-        </div>
-        <div class="upload-group">
-          <input type="text" placeholder="اسم الصورة 3">
-          <input type="file" accept="image/*">
-        </div>
+      const details = document.createElement('div');
+      details.className = 'container';
+      details.innerHTML = `
+        <details>
+          <summary>${sectionTitle}</summary>
+          <p class="description">شرح توضيحي للبند ${i}.</p>
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+        </details>
       `;
-      sectionsContainer.appendChild(section);
-    });
-
-    function generateHTMLPage() {
-      const phone = document.getElementById("phone").value.trim();
-      if (!phone) {
-        alert("يرجى إدخال رقم الجوال");
-        return;
-      }
-
-      const data = { phone: phone, sections: [] };
-
-      const sections = document.querySelectorAll(".section");
-      sections.forEach(section => {
-        const title = section.querySelector("select").value;
-        const inputs = section.querySelectorAll("input[type='text']");
-        const files = section.querySelectorAll("input[type='file']");
-        const images = [];
-
-        for (let i = 0; i < inputs.length; i++) {
-          const name = inputs[i].value;
-          const file = files[i].files[0];
-          const reader = new FileReader();
-          reader.onload = (function(imgName) {
-            return function(e) {
-              images.push({ name: imgName, url: e.target.result });
-              if (images.length === 3) {
-                data.sections.push({ title: title, images: images });
-                if (data.sections.length === sections.length) {
-                  const key = phone;
-                  db.ref("enjaz/" + key).set(data, () => {
-                    const pageUrl = location.href + "?id=" + phone;
-                    document.getElementById("resultLink").innerHTML = `<a href="${pageUrl}" target="_blank">${pageUrl}</a>`;
-                    const qr = new QRious({ element: document.getElementById("qrCanvas"), value: pageUrl, size: 200 });
-                  });
-                }
-              }
-            }
-          })(name);
-          if (file) reader.readAsDataURL(file);
-        }
-      });
+      formArea.appendChild(details);
     }
 
-    function sharePage() {
-      const link = document.getElementById("resultLink").textContent;
-      if (navigator.share) {
-        navigator.share({
-          title: "ملف الإنجاز",
-          text: "رابط ملف الإنجاز",
-          url: link
-        });
-      } else {
-        alert("المشاركة غير مدعومة على هذا الجهاز");
+    function generateInputRow(section) {
+      return `
+        <div class="input-row">
+          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
+        </div>
+        <div class="preview"></div>
+      `;
+    }
+
+    function handleImage(input, section) {
+      const file = input.files[0];
+      const previewDiv = input.parentElement.nextElementSibling;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImages[section].push({ name: file.name, data: e.target.result });
+          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
+        };
+        reader.readAsDataURL(file);
       }
+    }
+
+    async function openReport() {
+      const reportWindow = window.open("", "_blank");
+      const style = `
+        <style>
+          body { font-family: 'Cairo', sans-serif; direction: rtl; padding: 20px; background: #fffbe6; }
+          h2 { color: #d35400; border-bottom: 1px solid #f39c12; padding-bottom: 5px; }
+          .image-block { margin: 10px 0; display: flex; align-items: center; gap: 10px; }
+          .image-block img { border: 1px solid #ccc; max-width: 150px; height: auto; border-radius: 8px; }
+          .qr { width: 80px; height: 80px; }
+        </style>
+      `;
+
+      let content = `<html><head><meta charset="UTF-8"><title>تقرير الأدلة</title>${style}</head><body>`;
+      content += `<h1 style="text-align:center;">تقرير الأدلة</h1>`;
+
+      for (const section in uploadedImages) {
+        const images = uploadedImages[section];
+        if (images.length === 0) continue;
+
+        content += `<h2>${section}</h2>`;
+
+        for (const img of images) {
+          const qrCanvas = document.createElement('canvas');
+          await QRCode.toCanvas(qrCanvas, img.name);
+          const qrData = qrCanvas.toDataURL("image/png");
+
+          content += `
+            <div class="image-block">
+              <img src="${img.data}" alt="${img.name}" />
+              <div>
+                <div><b>${img.name}</b></div>
+                <img class="qr" src="${qrData}" alt="QR" />
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      content += `</body></html>`;
+      reportWindow.document.write(content);
+      reportWindow.document.close();
     }
   </script>
 </body>
