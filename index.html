@@ -71,8 +71,12 @@
     <button onclick="generatePDF()">توليد ملف PDF</button>
   </div>
 
+  <!-- تحميل مكتبات jsPDF وخط Amiri -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/polyfills.umd.min.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.1/dist/fonts/Amiri-Regular-normal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
@@ -120,10 +124,12 @@
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      let y = 20;
-
-      // العنوان الرئيسي للملف
+      doc.addFont("Amiri-Regular", "Amiri", "normal");
+      doc.setFont("Amiri");
       doc.setFontSize(22);
+      let y = 25;
+
+      // العنوان الرئيسي
       doc.text("ملف إنجاز", 105, y, { align: "center" });
       y += 15;
 
@@ -133,20 +139,20 @@
 
         doc.setFontSize(16);
         doc.setTextColor(50, 50, 50);
-        doc.text(section, 105, y, { align: "center" });
+        doc.text(section, 200, y, { align: "right" });
         y += 10;
 
         for (let i = 0; i < images.length; i++) {
           const x = 15 + (i % 3) * 60;
           if (i > 0 && i % 3 === 0) y += 80;
 
-          // خلفية بنية لكل صورة
+          // خلفية بني فاتح
           doc.setFillColor(205, 170, 125);
           doc.rect(x - 5, y - 5, 55, 70, 'F');
 
           doc.addImage(images[i].data, 'JPEG', x, y, 45, 45);
 
-          // QR Code
+          // QR Code تحت الصورة
           const qrCanvas = document.createElement('canvas');
           await QRCode.toCanvas(qrCanvas, images[i].name);
           const qrData = qrCanvas.toDataURL("image/png");
@@ -156,11 +162,12 @@
         y += 80;
         if (y > 250) {
           doc.addPage();
-          y = 20;
+          doc.setFont("Amiri");
+          y = 25;
         }
       }
 
-      // QR النهائي أسفل الصفحة
+      // QR النهائي في آخر الصفحة
       doc.addPage();
       doc.setFontSize(16);
       doc.text("ملف الإنجاز النهائي", 105, 30, { align: "center" });
