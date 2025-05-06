@@ -75,7 +75,7 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script>
     const formArea = document.getElementById('form-area');
-    const uploadedImages = {}; // key: section, value: array of images
+    const uploadedImages = {};
 
     for (let i = 1; i <= 11; i++) {
       const sectionTitle = `البند رقم ${i}`;
@@ -122,34 +122,55 @@
       const doc = new jsPDF();
       let y = 20;
 
+      // العنوان الرئيسي للملف
+      doc.setFontSize(22);
+      doc.text("ملف إنجاز", 105, y, { align: "center" });
+      y += 15;
+
       for (const section in uploadedImages) {
         const images = uploadedImages[section];
         if (images.length === 0) continue;
 
-        doc.setFontSize(14);
-        doc.text(section, 10, y);
+        doc.setFontSize(16);
+        doc.setTextColor(50, 50, 50);
+        doc.text(section, 105, y, { align: "center" });
         y += 10;
 
         for (let i = 0; i < images.length; i++) {
-          const x = 10 + (i % 3) * 65;
+          const x = 15 + (i % 3) * 60;
           if (i > 0 && i % 3 === 0) y += 80;
 
-          doc.addImage(images[i].data, 'JPEG', x, y, 50, 50);
+          // خلفية بنية لكل صورة
+          doc.setFillColor(205, 170, 125);
+          doc.rect(x - 5, y - 5, 55, 70, 'F');
 
+          doc.addImage(images[i].data, 'JPEG', x, y, 45, 45);
+
+          // QR Code
           const qrCanvas = document.createElement('canvas');
           await QRCode.toCanvas(qrCanvas, images[i].name);
           const qrData = qrCanvas.toDataURL("image/png");
-          doc.addImage(qrData, 'PNG', x, y + 55, 30, 30);
+          doc.addImage(qrData, 'PNG', x, y + 48, 25, 25);
         }
 
-        y += 90;
+        y += 80;
         if (y > 250) {
           doc.addPage();
           y = 20;
         }
       }
 
-      doc.save("evaluation_report.pdf");
+      // QR النهائي أسفل الصفحة
+      doc.addPage();
+      doc.setFontSize(16);
+      doc.text("ملف الإنجاز النهائي", 105, 30, { align: "center" });
+
+      const finalQR = document.createElement('canvas');
+      await QRCode.toCanvas(finalQR, "ملف الإنجاز");
+      const finalQRData = finalQR.toDataURL("image/png");
+      doc.addImage(finalQRData, 'PNG', 90, 40, 30, 30);
+
+      doc.save("ملف_إنجاز.pdf");
     }
   </script>
 </body>
