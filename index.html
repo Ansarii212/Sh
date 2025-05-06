@@ -90,8 +90,6 @@
     <button onclick="openReport()">صفحة الإنجاز</button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
@@ -209,40 +207,7 @@
           <div class="button-row">
             <button onclick="window.print()">طباعة</button>
             <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
-            <button onclick="downloadPDF()">تحميل PDF</button>
           </div>
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-          <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-          <script>
-            function downloadPDF() {
-              const { jsPDF } = window.jspdf;
-              const content = document.getElementById("pdf-content");
-              html2canvas(content, { scale: 2 }).then(canvas => {
-                const imgData = canvas.toDataURL("image/png");
-                const pdf = new jsPDF("p", "mm", "a4");
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getHeight();
-
-                const imgWidth = pdfWidth;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                let heightLeft = imgHeight;
-                let position = 0;
-
-                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-                heightLeft -= pdfHeight;
-
-                while (heightLeft > 0) {
-                  position = position - pdfHeight;
-                  pdf.addPage();
-                  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-                  heightLeft -= pdfHeight;
-                }
-
-                pdf.save("report.pdf");
-              });
-            }
-          </script>
         </body>
         </html>
       `);
