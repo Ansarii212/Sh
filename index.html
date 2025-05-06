@@ -1,172 +1,110 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>نموذج تقييم الأدلة</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ملف الإنجاز</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
   <style>
     body {
-      font-family: 'Cairo', sans-serif;
-      background: linear-gradient(to right, #fceabb, #f8b500);
+      background-color: #f4f1ee;
+      font-family: 'Arial', sans-serif;
       padding: 20px;
-      direction: rtl;
     }
-    .container {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
+    h1 {
+      text-align: center;
+      color: #5a3e2b;
     }
-    details {
-      background: #fff7e6;
-      border: 2px dashed #f1a00d;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 10px;
-    }
-    summary {
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .description {
+    input, button {
+      padding: 10px;
+      font-size: 16px;
       margin: 10px 0;
-      color: #444;
-    }
-    .input-row {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-    }
-    .input-row input[type="file"] {
-      margin-left: 10px;
-    }
-    .preview {
-      font-size: 14px;
-      color: green;
-      margin-top: 5px;
+      width: 100%;
+      box-sizing: border-box;
     }
     button {
-      background-color: #ff9900;
-      border: none;
+      background-color: #8d6e63;
       color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 16px;
+      border: none;
       cursor: pointer;
-      margin-top: 20px;
     }
-    button:hover {
-      background-color: #e68a00;
+    #output {
+      white-space: pre-wrap;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
-  <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
-  <div id="form-area"></div>
-  <div style="text-align:center;">
-    <button onclick="generatePDF()">توليد ملف PDF</button>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <h1>ملف الإنجاز</h1>
+
+  <label for="phoneInput">رقم الجوال:</label>
+  <input type="text" id="phoneInput" placeholder="أدخل رقم الجوال">
+
+  <button onclick="generatePage()">توليد صفحة الإنجاز</button>
+  <button onclick="searchEnjaz()">عرض صفحة الإنجاز</button>
+
+  <div id="output"></div>
+
   <script>
-    const formArea = document.getElementById('form-area');
-    const uploadedImages = {};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxxx...", // استبدل هذه البيانات بما أرسلته مسبقًا
+      authDomain: "your-project.firebaseapp.com",
+      databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+      projectId: "your-project",
+      storageBucket: "your-project.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdefg"
+    };
 
-    for (let i = 1; i <= 11; i++) {
-      const sectionTitle = `البند رقم ${i}`;
-      uploadedImages[sectionTitle] = [];
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-      const details = document.createElement('div');
-      details.className = 'container';
-      details.innerHTML = `
-        <details>
-          <summary>${sectionTitle}</summary>
-          <p class="description">شرح توضيحي للبند ${i}.</p>
-          ${generateInputRow(sectionTitle)}
-          ${generateInputRow(sectionTitle)}
-          ${generateInputRow(sectionTitle)}
-        </details>
-      `;
-      formArea.appendChild(details);
-    }
-
-    function generateInputRow(section) {
-      return `
-        <div class="input-row">
-          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
-        </div>
-        <div class="preview"></div>
-      `;
-    }
-
-    function handleImage(input, section) {
-      const file = input.files[0];
-      const previewDiv = input.parentElement.nextElementSibling;
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedImages[section].push({ name: file.name, data: e.target.result });
-          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    async function generatePDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-
-      doc.setFontSize(22);
-      let y = 25;
-
-      doc.text("ملف إنجاز", 105, y, { align: "center" });
-      y += 15;
-
-      for (const section in uploadedImages) {
-        const images = uploadedImages[section];
-        if (images.length === 0) continue;
-
-        doc.setFontSize(16);
-        doc.setTextColor(50, 50, 50);
-        doc.text(section, 200, y, { align: "right" });
-        y += 10;
-
-        for (let i = 0; i < images.length; i++) {
-          const x = 15 + (i % 3) * 60;
-          if (i > 0 && i % 3 === 0) y += 80;
-
-          doc.setFillColor(205, 170, 125);
-          doc.rect(x - 5, y - 5, 55, 70, 'F');
-
-          doc.addImage(images[i].data, 'JPEG', x, y, 45, 45);
-
-          const qrCanvas = document.createElement('canvas');
-          await QRCode.toCanvas(qrCanvas, images[i].name);
-          const qrData = qrCanvas.toDataURL("image/png");
-          doc.addImage(qrData, 'PNG', x, y + 48, 25, 25);
-        }
-
-        y += 80;
-        if (y > 250) {
-          doc.addPage();
-          y = 25;
-        }
+    function generatePage() {
+      const phone = document.getElementById('phoneInput').value.trim();
+      if (!phone) {
+        alert("أدخل رقم الجوال");
+        return;
       }
 
-      doc.addPage();
-      doc.setFontSize(16);
-      doc.text("ملف الإنجاز النهائي", 105, 30, { align: "center" });
+      const enjazData = {
+        title: "صفحة إنجاز",
+        createdAt: new Date().toLocaleString()
+      };
 
-      const finalQR = document.createElement('canvas');
-      await QRCode.toCanvas(finalQR, "ملف الإنجاز");
-      const finalQRData = finalQR.toDataURL("image/png");
-      doc.addImage(finalQRData, 'PNG', 90, 40, 30, 30);
+      db.ref("enjaz/" + phone).set(enjazData)
+        .then(() => {
+          alert("تم حفظ صفحة الإنجاز بنجاح");
+        })
+        .catch((error) => {
+          alert("حدث خطأ أثناء الحفظ: " + error.message);
+        });
+    }
 
-      doc.save("ملف_إنجاز.pdf");
+    function searchEnjaz() {
+      const phone = document.getElementById('phoneInput').value.trim();
+      if (!phone) {
+        alert("أدخل رقم الجوال للبحث");
+        return;
+      }
+
+      db.ref("enjaz/" + phone).get()
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            document.getElementById("output").innerText = JSON.stringify(snapshot.val(), null, 2);
+          } else {
+            alert("لا توجد بيانات لهذا الرقم.");
+          }
+        })
+        .catch(error => {
+          alert("خطأ أثناء البحث: " + error.message);
+        });
     }
   </script>
+
 </body>
 </html>
