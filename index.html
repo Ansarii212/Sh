@@ -71,10 +71,8 @@
     <button onclick="generatePDF()">توليد ملف PDF</button>
   </div>
 
-  <!-- تحميل مكتبات jsPDF وخط Amiri -->
+  <!-- تحميل مكتبات jsPDF وخط Cairo -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/polyfills.umd.min.js"></script>
-  <script src="https://unpkg.com/jspdf@2.5.1/dist/fonts/Amiri-Regular-normal.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
   <script>
@@ -123,9 +121,8 @@
 
     window.generatePDF = async function () {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.addFont("Amiri-Regular", "Amiri", "normal");
-      doc.setFont("Amiri");
+      const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
       doc.setFontSize(22);
       let y = 25;
 
@@ -159,7 +156,6 @@
         y += 80;
         if (y > 250) {
           doc.addPage();
-          doc.setFont("Amiri");
           y = 25;
         }
       }
