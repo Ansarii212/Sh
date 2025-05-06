@@ -111,9 +111,6 @@
     <button onclick="openReport()">صفحة الإنجاز</button>
   </div>
 
-  <!-- مكتبة html2pdf -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
@@ -165,6 +162,7 @@
         <head>
           <title>صفحة الإنجاز</title>
           <meta charset="UTF-8" />
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
           <style>
             body {
               font-family: 'Cairo', sans-serif;
@@ -213,19 +211,8 @@
             button:hover {
               background-color: #e68a00;
             }
-            @media print {
-              @page {
-                margin: 20mm;
-              }
-              .button-row {
-                display: none !important;
-              }
-              .image-row img {
-                page-break-inside: avoid;
-              }
-              .page-break {
-                page-break-after: always;
-              }
+            .page-break {
+              page-break-after: always;
             }
           </style>
         </head>
@@ -252,23 +239,23 @@
       }
 
       reportWindow.document.write(`
-            </div>
-            <div class="button-row">
-              <button onclick="downloadPDF()">تحميل PDF</button>
-            </div>
-            <script>
-              function downloadPDF() {
-                const element = document.getElementById('report-content');
-                html2pdf().set({
-                  margin: 10,
-                  filename: 'صفحة_الإنجاز.pdf',
-                  image: { type: 'jpeg', quality: 0.98 },
-                  html2canvas: { scale: 2 },
-                  jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                }).from(element).save();
-              }
-            </script>
-          </body>
+          </div>
+          <div class="button-row">
+            <button onclick="downloadPDF()">تحميل PDF</button>
+          </div>
+          <script>
+            function downloadPDF() {
+              const element = document.getElementById('report-content');
+              html2pdf().set({
+                margin: 10,
+                filename: 'صفحة_الإنجاز.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+              }).from(element).save();
+            }
+          </script>
+        </body>
         </html>
       `);
 
