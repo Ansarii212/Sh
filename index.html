@@ -2,87 +2,118 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <title>نموذج البنود</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>نموذج رفع أدلة تقييم أداء المعلم</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f5f5f5;
-      direction: rtl;
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
       padding: 20px;
+      direction: rtl;
     }
     .container {
-      background-color: white;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
       margin-bottom: 20px;
     }
-    label {
-      display: block;
-      margin: 10px 0 5px;
+    details {
+      background: #fff7e6;
+      border: 2px dashed #f1a00d;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
     }
-    input[type="text"],
-    input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
+    summary {
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .description {
+      margin: 10px 0;
+      color: #444;
+    }
+    input[type="text"], input[type="file"] {
+      width: 30%;
+      margin: 5px;
+      padding: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
+    .file-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
     button {
-      background-color: #007bff;
+      background-color: #ff9900;
+      border: none;
       color: white;
       padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
-      width: 100%;
     }
     button:hover {
-      background-color: #0056b3;
-    }
-    #status {
-      margin-top: 15px;
-      color: green;
-      font-weight: bold;
+      background-color: #e68a00;
     }
   </style>
 </head>
 <body>
+  <h1 style="text-align:center;">نموذج تقييم البنود ورفع الأدلة</h1>
+
+  <!-- القوائم -->
   <div class="container">
-    <h1>نموذج رفع أدلة تقييم أداء المعلم</h1>
-    <form id="evidenceForm">
-      <label>اسم المعلم:</label>
-      <input type="text" name="teacherName" required>
-
-      <label>رقم الهوية:</label>
-      <input type="text" name="teacherID" required>
-
-      <label>المدرسة:</label>
-      <input type="text" name="school" required>
-
-      <label>المكتب:</label>
-      <input type="text" name="office" required>
-
-      <label>تحميل الأدلة (PDF فقط):</label>
-      <input type="file" id="fileUpload" accept=".pdf" required>
-
-      <button type="submit">إرسال</button>
-    </form>
-    <div id="status"></div>
+    <details><summary>البند رقم 1</summary><div class="section"><p class="description">شرح توضيحي للبند 1 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 2</summary><div class="section"><p class="description">شرح توضيحي للبند 2 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 3</summary><div class="section"><p class="description">شرح توضيحي للبند 3 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 4</summary><div class="section"><p class="description">شرح توضيحي للبند 4 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 5</summary><div class="section"><p class="description">شرح توضيحي للبند 5 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 6</summary><div class="section"><p class="description">شرح توضيحي للبند 6 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 7</summary><div class="section"><p class="description">شرح توضيحي للبند 7 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 8</summary><div class="section"><p class="description">شرح توضيحي للبند 8 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 9</summary><div class="section"><p class="description">شرح توضيحي للبند 9 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 10</summary><div class="section"><p class="description">شرح توضيحي للبند 10 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
+  </div>
+  <div class="container">
+    <details><summary>البند رقم 11</summary><div class="section"><p class="description">شرح توضيحي للبند 11 يوضع هنا.</p><input type="text" placeholder="ملاحظة 1" /><input type="text" placeholder="ملاحظة 2" /><input type="text" placeholder="ملاحظة 3" /><div class="file-group"><input type="file" accept="image/*" /><input type="file" accept="image/*" /><input type="file" accept="image/*" /></div></div></details>
   </div>
 
+  <div style="text-align:center; margin-top:30px;">
+    <button onclick="generatePDF()">توليد ملف PDF</button>
+  </div>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script>
-    // إعدادات Firebase - استبدل القيم ببيانات مشروعك
+    // ضع هنا إعدادات firebaseConfig الخاصة بك
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
@@ -91,48 +122,14 @@
       messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
       appId: "YOUR_APP_ID"
     };
-
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
     const storage = firebase.storage();
+    const db = firebase.firestore();
 
-    document.getElementById('evidenceForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = e.target.teacherName.value;
-      const id = e.target.teacherID.value;
-      const school = e.target.school.value;
-      const office = e.target.office.value;
-      const file = document.getElementById('fileUpload').files[0];
-
-      if (!file || file.type !== "application/pdf") {
-        alert("يرجى رفع ملف PDF فقط.");
-        return;
-      }
-
-      const statusDiv = document.getElementById('status');
-      statusDiv.innerText = "جاري الرفع...";
-
-      try {
-        const storageRef = storage.ref(`evidences/${id}-${file.name}`);
-        await storageRef.put(file);
-        const fileURL = await storageRef.getDownloadURL();
-
-        await db.collection("evidences").add({
-          teacherName: name,
-          teacherID: id,
-          school: school,
-          office: office,
-          fileURL: fileURL,
-          timestamp: new Date()
-        });
-
-        statusDiv.innerText = "تم الإرسال بنجاح!";
-        e.target.reset();
-      } catch (error) {
-        statusDiv.innerText = "حدث خطأ أثناء الإرسال.";
-        console.error(error);
-      }
-    });
+    function generatePDF() {
+      alert("سيتم إنشاء PDF لاحقًا.");
+      // لاحقًا ندمج الصور والنصوص والـ QR في PDF باستخدام jsPDF
+    }
   </script>
 </body>
 </html>
