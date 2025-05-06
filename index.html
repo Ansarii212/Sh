@@ -42,14 +42,6 @@
     .input-row input[type="file"] {
       margin-left: 10px;
     }
-    .input-row input[type="text"] {
-      flex: 1;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      min-width: 250px;
-    }
     .preview {
       font-size: 14px;
       color: green;
@@ -73,7 +65,6 @@
 <body>
   <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
-  <!-- 11 قوائم منسدلة -->
   <div id="form-area"></div>
 
   <div style="text-align:center;">
@@ -81,42 +72,45 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script>
     const formArea = document.getElementById('form-area');
-    const uploadedImages = [];
+    const uploadedImages = {}; // key: section, value: array of images
 
     for (let i = 1; i <= 11; i++) {
+      const sectionTitle = `البند رقم ${i}`;
+      uploadedImages[sectionTitle] = [];
+
       const details = document.createElement('div');
       details.className = 'container';
       details.innerHTML = `
         <details>
-          <summary>البند رقم ${i}</summary>
+          <summary>${sectionTitle}</summary>
           <p class="description">شرح توضيحي للبند ${i}.</p>
-          ${generateInputRow()}
-          ${generateInputRow()}
-          ${generateInputRow()}
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
         </details>
       `;
       formArea.appendChild(details);
     }
 
-    function generateInputRow() {
+    function generateInputRow(section) {
       return `
         <div class="input-row">
-          <input type="file" accept="image/*" onchange="handleImage(this)" />
-          <input type="text" placeholder="ملاحظة" />
+          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
         </div>
         <div class="preview"></div>
       `;
     }
 
-    function handleImage(input) {
+    function handleImage(input, section) {
       const file = input.files[0];
       const previewDiv = input.parentElement.nextElementSibling;
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          uploadedImages.push({ name: file.name, data: e.target.result });
+          uploadedImages[section].push({ name: file.name, data: e.target.result });
           previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
         };
         reader.readAsDataURL(file);
@@ -128,23 +122,34 @@
       const doc = new jsPDF();
       let y = 20;
 
-      if (uploadedImages.length === 0) {
-        alert("يرجى رفع صورة واحدة على الأقل.");
-        return;
-      }
+      for (const section in uploadedImages) {
+        const images = uploadedImages[section];
+        if (images.length === 0) continue;
 
-      for (let i = 0; i < uploadedImages.length; i++) {
-        doc.text(`الصورة رقم ${i + 1}: ${uploadedImages[i].name}`, 10, y);
+        doc.setFontSize(14);
+        doc.text(section, 10, y);
         y += 10;
-        doc.addImage(uploadedImages[i].data, 'JPEG', 10, y, 50, 50);
-        y += 60;
-        if (y > 270) {
+
+        for (let i = 0; i < images.length; i++) {
+          const x = 10 + (i % 3) * 65;
+          if (i > 0 && i % 3 === 0) y += 80;
+
+          doc.addImage(images[i].data, 'JPEG', x, y, 50, 50);
+
+          const qrCanvas = document.createElement('canvas');
+          await QRCode.toCanvas(qrCanvas, images[i].name);
+          const qrData = qrCanvas.toDataURL("image/png");
+          doc.addImage(qrData, 'PNG', x, y + 55, 30, 30);
+        }
+
+        y += 90;
+        if (y > 250) {
           doc.addPage();
           y = 20;
         }
       }
 
-      doc.save("report.pdf");
+      doc.save("evaluation_report.pdf");
     }
   </script>
 </body>
