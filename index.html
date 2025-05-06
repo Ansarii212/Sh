@@ -3,214 +3,176 @@
 <head>
   <meta charset="UTF-8">
   <title>ملف الإنجاز</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <style>
     body {
-      font-family: 'Tahoma', sans-serif;
-      background-color: #fdf8f2;
-      direction: rtl;
+      font-family: 'Arial', sans-serif;
+      background-color: #fdf7f0;
       padding: 20px;
-      color: #4a2e1e;
-    }
-    h1 {
-      text-align: center;
-      font-size: 28px;
-      color: #5c3b27;
+      direction: rtl;
     }
     .section {
-      border: 2px solid #d1bfa3;
+      border: 2px solid #a67c52;
       border-radius: 12px;
       padding: 15px;
-      margin-bottom: 25px;
-      background-color: #fffaf5;
+      margin-bottom: 20px;
+      background-color: #fff8f0;
     }
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
-      display: block;
-    }
-    select, input[type="text"] {
-      width: 80%;
+    .dropdown {
+      width: 100%;
       padding: 8px;
       margin-bottom: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      background-color: #fffaf4;
+      border: 1px solid #d9bfa3;
+      border-radius: 5px;
+    }
+    .desc {
+      margin: 10px 0;
+      color: #5a4632;
     }
     .upload-group {
       display: flex;
       gap: 10px;
-      align-items: center;
       margin-bottom: 10px;
     }
+    .upload-group input[type="text"] {
+      flex: 1;
+      padding: 5px;
+    }
     .upload-group input[type="file"] {
-      flex-shrink: 0;
+      width: 120px;
     }
-    .preview {
-      font-size: 12px;
-      color: green;
-    }
-    #generateBtn, #searchBtn {
-      background-color: #8c6239;
+    .btn {
+      margin: 5px;
+      padding: 10px 15px;
+      background-color: #a67c52;
       color: white;
       border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
+      border-radius: 5px;
       cursor: pointer;
     }
-    #generateBtn:hover, #searchBtn:hover {
-      background-color: #a1734c;
+    .btn:hover {
+      background-color: #8b6543;
     }
-    #output {
+    #qrCanvas {
       margin-top: 20px;
-      padding: 15px;
-      background-color: #fff3e6;
-      border: 1px solid #c9ad90;
     }
   </style>
 </head>
 <body>
-  <h1>ملف الإنجاز</h1>
+  <h1 style="text-align:center;">ملف الإنجاز</h1>
   <label>رقم الجوال:</label>
-  <input type="text" id="phone" placeholder="مثال: 0551234567">
+  <input type="text" id="phone" style="width: 100%; padding: 8px; margin-bottom: 20px;" placeholder="05XXXXXXXX">
 
-  <div id="sectionsContainer"></div>
+  <div id="sections-container"></div>
 
-  <button id="generateBtn">توليد الصفحة</button>
-  <br><br>
-  <label>ابحث برقم الجوال:</label>
-  <input type="text" id="searchPhone">
-  <button id="searchBtn">عرض صفحة الإنجاز</button>
+  <button class="btn" onclick="generateHTMLPage()">توليد صفحة الإنجاز</button>
+  <button class="btn" onclick="window.print()">طباعة</button>
+  <button class="btn" onclick="sharePage()">مشاركة</button>
 
-  <div id="output"></div>
+  <div id="resultLink" style="margin-top: 20px;"></div>
+  <canvas id="qrCanvas"></canvas>
 
   <script>
     const firebaseConfig = {
-      apiKey: "API_KEY",
-      authDomain: "PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://PROJECT_ID.firebaseio.com",
-      projectId: "PROJECT_ID",
-      storageBucket: "PROJECT_ID.appspot.com",
-      messagingSenderId: "SENDER_ID",
-      appId: "APP_ID"
+      apiKey: "AIzaSyCr4T8GLRxtf_6LNrokjKvmBOwSkuGO5yQ",
+      authDomain: "hamsa-6009e.firebaseapp.com",
+      databaseURL: "https://hamsa-6009e-default-rtdb.firebaseio.com",
+      projectId: "hamsa-6009e",
+      storageBucket: "hamsa-6009e.firebasestorage.app",
+      messagingSenderId: "998163671039",
+      appId: "1:998163671039:web:d1930ea5b71a3a3fc729ca",
+      measurementId: "G-PD1QB8X0FE"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const storage = firebase.storage();
 
-    const sectionTitles = [
-      "الدرس الأول", "الدرس الثاني", "الدرس الثالث",
-      "الدرس الرابع", "الدرس الخامس", "الدرس السادس",
-      "الدرس السابع", "الدرس الثامن", "الدرس التاسع",
-      "الدرس العاشر", "الدرس الحادي عشر"
+    const titles = [
+      "الدرس الأول", "الدرس الثاني", "الدرس الثالث", "الدرس الرابع",
+      "الدرس الخامس", "الدرس السادس", "الدرس السابع", "الدرس الثامن",
+      "الدرس التاسع", "الدرس العاشر", "الدرس الحادي عشر"
     ];
 
-    const container = document.getElementById("sectionsContainer");
+    const sectionsContainer = document.getElementById("sections-container");
 
-    sectionTitles.forEach((title, index) => {
-      const sectionDiv = document.createElement("div");
-      sectionDiv.className = "section";
-      sectionDiv.innerHTML = `
-        <label>${title}</label>
-        <select>
-          <option>اختر من القائمة</option>
-          <option>خيار 1</option>
-          <option>خيار 2</option>
+    titles.forEach((title, index) => {
+      const section = document.createElement("div");
+      section.className = "section";
+      section.innerHTML = `
+        <select class="dropdown">
+          <option>${title}</option>
         </select>
-        <p>شرح متعلق بـ ${title}</p>
-        ${[1,2,3].map(i => `
-          <div class="upload-group">
-            <input type="file" accept="image/*" data-section="${index}" data-index="${i}">
-            <span class="preview" id="preview-${index}-${i}">لم يتم رفع صورة</span>
-          </div>
-        `).join('')}
+        <div class="desc">شرح نصي للدرس.</div>
+        <div class="upload-group">
+          <input type="text" placeholder="اسم الصورة 1">
+          <input type="file" accept="image/*">
+        </div>
+        <div class="upload-group">
+          <input type="text" placeholder="اسم الصورة 2">
+          <input type="file" accept="image/*">
+        </div>
+        <div class="upload-group">
+          <input type="text" placeholder="اسم الصورة 3">
+          <input type="file" accept="image/*">
+        </div>
       `;
-      container.appendChild(sectionDiv);
+      sectionsContainer.appendChild(section);
     });
 
-    const uploadInputs = document.querySelectorAll('input[type="file"]');
-    const imageLinks = {}; // لتخزين الروابط بعد الرفع
+    function generateHTMLPage() {
+      const phone = document.getElementById("phone").value.trim();
+      if (!phone) {
+        alert("يرجى إدخال رقم الجوال");
+        return;
+      }
 
-    uploadInputs.forEach(input => {
-      input.addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const section = e.target.dataset.section;
-        const index = e.target.dataset.index;
-        const phone = document.getElementById("phone").value;
-        if (!phone) return alert("أدخل رقم الجوال أولاً");
+      const data = { phone: phone, sections: [] };
 
-        const ref = storage.ref(`${phone}/${section}_${index}_${file.name}`);
-        await ref.put(file);
-        const url = await ref.getDownloadURL();
+      const sections = document.querySelectorAll(".section");
+      sections.forEach(section => {
+        const title = section.querySelector("select").value;
+        const inputs = section.querySelectorAll("input[type='text']");
+        const files = section.querySelectorAll("input[type='file']");
+        const images = [];
 
-        if (!imageLinks[section]) imageLinks[section] = {};
-        imageLinks[section][index] = url;
-
-        document.getElementById(`preview-${section}-${index}`).textContent = file.name;
+        for (let i = 0; i < inputs.length; i++) {
+          const name = inputs[i].value;
+          const file = files[i].files[0];
+          const reader = new FileReader();
+          reader.onload = (function(imgName) {
+            return function(e) {
+              images.push({ name: imgName, url: e.target.result });
+              if (images.length === 3) {
+                data.sections.push({ title: title, images: images });
+                if (data.sections.length === sections.length) {
+                  const key = phone;
+                  db.ref("enjaz/" + key).set(data, () => {
+                    const pageUrl = location.href + "?id=" + phone;
+                    document.getElementById("resultLink").innerHTML = `<a href="${pageUrl}" target="_blank">${pageUrl}</a>`;
+                    const qr = new QRious({ element: document.getElementById("qrCanvas"), value: pageUrl, size: 200 });
+                  });
+                }
+              }
+            }
+          })(name);
+          if (file) reader.readAsDataURL(file);
+        }
       });
-    });
+    }
 
-    document.getElementById("generateBtn").addEventListener("click", () => {
-      const phone = document.getElementById("phone").value;
-      if (!phone) return alert("أدخل رقم الجوال");
-
-      const data = {
-        phone,
-        images: imageLinks,
-        timestamp: Date.now()
-      };
-
-      db.ref("enjaz/" + phone).set(data).then(() => {
-        const link = location.href + "?view=" + phone;
-        document.getElementById("output").innerHTML = `
-          <p>تم حفظ الصفحة بنجاح:</p>
-          <a href="${link}" target="_blank">${link}</a>
-          <div id="qrcode"></div>
-        `;
-        new QRCode(document.getElementById("qrcode"), link);
-      });
-    });
-
-    document.getElementById("searchBtn").addEventListener("click", () => {
-      const phone = document.getElementById("searchPhone").value;
-      if (!phone) return alert("أدخل رقم الجوال");
-
-      window.open(location.href + "?view=" + phone, "_blank");
-    });
-
-    // عرض الصفحة عند الطلب
-    const urlParams = new URLSearchParams(window.location.search);
-    const viewPhone = urlParams.get("view");
-    if (viewPhone) {
-      db.ref("enjaz/" + viewPhone).once("value").then(snap => {
-        const data = snap.val();
-        if (!data) return document.body.innerHTML = "<h2>لا توجد بيانات</h2>";
-
-        document.body.innerHTML = `<h1>ملف إنجاز: ${viewPhone}</h1>`;
-        Object.keys(data.images || {}).forEach(section => {
-          document.body.innerHTML += `<h2>${sectionTitles[section]}</h2>`;
-          const group = data.images[section];
-          const row = document.createElement("div");
-          row.style.display = "flex";
-          row.style.gap = "10px";
-          row.style.marginBottom = "20px";
-          Object.values(group).forEach(link => {
-            const div = document.createElement("div");
-            div.innerHTML = `<img src="${link}" width="150"><div class="qr"></div>`;
-            row.appendChild(div);
-            const qrDiv = div.querySelector(".qr");
-            new QRCode(qrDiv, link);
-          });
-          document.body.appendChild(row);
+    function sharePage() {
+      const link = document.getElementById("resultLink").textContent;
+      if (navigator.share) {
+        navigator.share({
+          title: "ملف الإنجاز",
+          text: "رابط ملف الإنجاز",
+          url: link
         });
-        const linkToPage = window.location.href;
-        const qrMain = document.createElement("div");
-        new QRCode(qrMain, linkToPage);
-        document.body.appendChild(qrMain);
-      });
+      } else {
+        alert("المشاركة غير مدعومة على هذا الجهاز");
+      }
     }
   </script>
 </body>
