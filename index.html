@@ -83,8 +83,6 @@
       text-align: center;
       margin-top: 30px;
     }
-
-    /* تحسين للطباعة */
     @media print {
       @page {
         margin: 20mm;
@@ -112,6 +110,9 @@
   <div class="no-print" style="text-align:center;">
     <button onclick="openReport()">صفحة الإنجاز</button>
   </div>
+
+  <!-- مكتبة html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
     const formArea = document.getElementById('form-area');
@@ -229,7 +230,8 @@
           </style>
         </head>
         <body>
-          <h1 style="text-align:center;">صفحة الإنجاز</h1>
+          <div id="report-content">
+            <h1 style="text-align:center;">صفحة الإنجاز</h1>
       `);
 
       let count = 0;
@@ -250,13 +252,26 @@
       }
 
       reportWindow.document.write(`
-          <div class="button-row">
-            <button onclick="window.print()">طباعة</button>
-            <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
-          </div>
-        </body>
+            </div>
+            <div class="button-row">
+              <button onclick="downloadPDF()">تحميل PDF</button>
+            </div>
+            <script>
+              function downloadPDF() {
+                const element = document.getElementById('report-content');
+                html2pdf().set({
+                  margin: 10,
+                  filename: 'صفحة_الإنجاز.pdf',
+                  image: { type: 'jpeg', quality: 0.98 },
+                  html2canvas: { scale: 2 },
+                  jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                }).from(element).save();
+              }
+            </script>
+          </body>
         </html>
       `);
+
       reportWindow.document.close();
     }
   </script>
