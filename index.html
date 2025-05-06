@@ -64,17 +64,13 @@
 </head>
 <body>
   <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
-
   <div id="form-area"></div>
-
   <div style="text-align:center;">
     <button onclick="generatePDF()">توليد ملف PDF</button>
   </div>
 
-  <!-- تحميل مكتبات jsPDF وخط Cairo -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
@@ -119,7 +115,7 @@
       }
     }
 
-    window.generatePDF = async function () {
+    async function generatePDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
@@ -170,7 +166,7 @@
       doc.addImage(finalQRData, 'PNG', 90, 40, 30, 30);
 
       doc.save("ملف_إنجاز.pdf");
-    };
+    }
   </script>
 </body>
 </html>
