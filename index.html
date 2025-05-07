@@ -272,34 +272,34 @@ for (let i = 1; i <= 11; i++) {
           teacherSignature = e.target.result;
           document.getElementById('signaturePreview').innerHTML = `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px; margin-top:10px;" alt="التوقيع">`;
         };
-        reader.readAsDataURL(file);
-      }
-    }
+        reader.readAsDataURL(<script>
 
-// العناوين الجديدة
-const newTitles = [
-  "الدورات",
-  "الشواهد",
-  "الصور",
-  "الحفلات",
-  "توزيع المنهج",
-  "الدورات",
-  "الشواهد",
-  "الصور",
-  "الحفلات",
-  "توزيع المنهج",
-  "النتيجة"
-];
+   
+// دالة لتعديل العناوين
+function updateTitles() {
+  // العناوين الجديدة
+  const newTitles = [
+    "الدورات",
+    "الشواهد",
+    "الصور",
+    "الحفلات",
+    "توزيع المنهج",
+    "الدورات",
+    "الشواهد",
+    "الصور",
+    "الحفلات",
+    "توزيع المنهج",
+    "النتيجة"
+  ];
 
-// حفظ العناوين في localStorage
-let editedTitles = {};
-for (let i = 1; i <= 11; i++) {
-  editedTitles[i] = newTitles[i - 1];
-}
-localStorage.setItem("editedTitles", JSON.stringify(editedTitles));
+  // حفظ العناوين في localStorage
+  let editedTitles = {};
+  for (let i = 1; i <= 11; i++) {
+    editedTitles[i] = newTitles[i - 1];
+  }
+  localStorage.setItem("editedTitles", JSON.stringify(editedTitles));
 
-// دالة لتطبيق العناوين على الصفحة
-function loadEditedTitles() {
+  // تطبيق العناوين على الصفحة
   let titles = JSON.parse(localStorage.getItem("editedTitles")) || {};
   for (let itemId in titles) {
     let container = document.getElementById("titleContainer_" + itemId);
@@ -313,10 +313,12 @@ function loadEditedTitles() {
   }
 }
 
-// تشغيل عند تحميل الصفحة
+// تشغيل الدالة عند تحميل الصفحة
 window.onload = function() {
-  loadEditedTitles();
+  // تحديث العناوين عند تحميل الصفحة
+  updateTitles();
 };
+
     
     function openReport() {
       const reportWindow = window.open('', '_blank');
