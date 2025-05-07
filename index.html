@@ -122,6 +122,23 @@
       text-decoration: none;
       font-weight: bold;
     }
+
+    .arrow-buttons {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+  justify-content: center;
+}
+
+.arrow-label {
+  font-size: 14px;
+  color: white;
+  background-color: #8B4513;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-family: 'Cairo', sans-serif;
+}
     @media print {
       @page {
         size: A4;
@@ -162,6 +179,10 @@
   </div>
 
   <div id="form-area"></div>
+<div class="arrow-buttons">
+  <button class="arrow-button" onclick="scrollToInput(1)">↓</button>
+  <span class="arrow-label">اضغط السهم لإضافة الشواهد</span>
+</div>
 
   <!-- توقيع المعلم -->
   <div class="container">
