@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>نموذج تقييم الأدلة</title>
+  <title>نموذج الشواهد التعليمية للمعلم/ة  </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -123,13 +123,7 @@
       font-weight: bold;
     }
 
-    .arrow-buttons {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 10px;
-  justify-content: center;
-}
+
 
 .arrow-label {
   font-size: 14px;
@@ -162,12 +156,15 @@
     <a href="https://ansarii212.github.io/Cert/" target="_blank">العودة للصفحة الرئيسية</a>
   </div>
 
-  <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
+  <h1 style="text-align:center;">نموذج الشواهد التعليمية للمعلم/ة</h1>
+<div class="arrow-buttons">
 
+  <span class="arrow-label">اضغط الأسهم الجانبية لإضافة الشواهد</span>
+</div>
   <!-- Teacher Info Box -->
   <div class="teacher-info container">
     <img id="teacherPhotoPreview" class="teacher-photo" alt="صورة المعلم" />
-    <label>اسم المعلم: <input type="text" id="teacherName"></label>
+    <label>اسم المعلم/ة: <input type="text" id="teacherName"></label>
     <label>التخصص: <input type="text" id="teacherMajor"></label>
     <label>رقم الهوية: <input type="text" id="teacherID"></label>
     <label>تاريخ الميلاد: <input type="date" id="teacherBirth"></label>
@@ -179,14 +176,11 @@
   </div>
 
   <div id="form-area"></div>
-<div class="arrow-buttons">
-  <button class="arrow-button" onclick="scrollToInput(1)">↓</button>
-  <span class="arrow-label">اضغط السهم لإضافة الشواهد</span>
-</div>
+
 
   <!-- توقيع المعلم -->
   <div class="container">
-    <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
+    <label>توقيع المعلم/ة (كتابة): <input type="text" id="teacherSignText"></label>
     <label>رفع صورة التوقيع:
       <input type="file" accept="image/*" onchange="handleSignature(this)">
     </label>
