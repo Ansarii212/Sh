@@ -1,168 +1,71 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>صفحة رفع ملفات البنود</title>
+  <title>تقرير متابعة</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #f5f5dc;
-      color: #333;
+      background-color: #f9f5ef;
       margin: 0;
-      padding: 0;
-    }
-    .header {
-      background-color: #8b5e3c;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.8rem;
-    }
-    .container {
-      background: white;
-      border: 2px solid #d2b48c;
-      border-radius: 12px;
-      margin: 20px auto;
       padding: 20px;
-      width: 95%;
-      max-width: 800px;
-      box-shadow: 0 0 10px #ccc;
+      direction: rtl;
     }
-    summary {
-      font-size: 1.4rem;
-      font-weight: bold;
-      cursor: pointer;
+
+    h2 {
+      color: #5a3e36;
     }
-    .upload-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
+
+    .item {
+      background-color: #fffaf3;
+      border: 2px dashed #c2b280;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
-    .upload-row input[type="file"] {
-      flex: 1;
+
+    .item h3 {
+      color: #8b5e3c;
+      margin-bottom: 10px;
     }
-    .upload-row button {
-      background-color: #8b5e3c;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .upload-row button:hover {
-      background-color: #a37046;
-    }
-    .uploaded-img {
-      margin-top: 10px;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .description {
+
+    .item p {
       margin: 10px 0;
-      padding: 10px;
-      background-color: #f9f1e7;
-      border-left: 5px solid #d2b48c;
-      border-radius: 6px;
+      font-size: 16px;
     }
-    .no-print {
+
+    .upload-label {
       display: block;
+      margin-top: 10px;
+      color: #5a3e36;
+      font-weight: bold;
     }
-    @media print {
-      .no-print {
-        display: none;
-      }
+
+    input[type="file"] {
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    صفحة رفع ملفات البنود
+  <h2>نموذج تقرير المتابعة</h2>
+
+  <div class="item">
+    <h3>البند الأول: المظهر العام</h3>
+    <p>يُقصد به مدى نظافة المكان وترتيبه بشكل عام، بما يشمل الأرضيات، النوافذ، المكاتب، والحوائط.</p>
+    <label class="upload-label">تحميل الصور:</label>
+    <input type="file" accept="image/*" multiple>
   </div>
 
-  <!-- نموذج إضافة بند جديد -->
-  <div class="container no-print">
-    <label>عنوان البند: <input type="text" id="sectionTitleInput" style="width:100%; border-radius:8px;"></label><br><br>
-    <label>الشرح / الأمثلة: <textarea id="sectionDescInput" rows="3" style="width:100%; border-radius:8px;"></textarea></label><br><br>
-    <button onclick="addCustomSection()">إضافة البند</button>
+  <div class="item">
+    <h3>البند الثاني: أدوات السلامة</h3>
+    <p>يشمل توفر طفايات الحريق، لوحات الإخلاء، صناديق الإسعافات الأولية، وسلامة الأسلاك الكهربائية.</p>
+    <label class="upload-label">تحميل الصور:</label>
+    <input type="file" accept="image/*" multiple>
   </div>
 
-  <!-- الحاوية الرئيسية لعرض البنود -->
-  <div id="formArea"></div>
-
-  <script>
-    const formArea = document.getElementById('formArea');
-    const uploadedImages = {};
-
-    function generateInputRow(category) {
-      const rowId = `row-${category}-${Math.floor(Math.random() * 10000)}`;
-      return `
-        <div class="upload-row" id="${rowId}">
-          <input type="file" accept="image/*" onchange="handleFileUpload(event, '${category}', '${rowId}')">
-          <button onclick="removeRow('${rowId}')">حذف</button>
-        </div>
-      `;
-    }
-
-    function removeRow(rowId) {
-      const row = document.getElementById(rowId);
-      if (row) {
-        row.remove();
-      }
-    }
-
-    function handleFileUpload(event, category, rowId) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.className = 'uploaded-img';
-          const row = document.getElementById(rowId);
-          row.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-
-        if (!uploadedImages[category]) {
-          uploadedImages[category] = [];
-        }
-        uploadedImages[category].push(file);
-      }
-    }
-
-    function addCustomSection() {
-      const title = document.getElementById('sectionTitleInput').value.trim();
-      const desc = document.getElementById('sectionDescInput').value.trim();
-
-      if (!title) {
-        alert("يرجى كتابة عنوان البند.");
-        return;
-      }
-
-      uploadedImages[title] = [];
-
-      const details = document.createElement('div');
-      details.className = 'container';
-      details.innerHTML = `
-        <details open>
-          <summary>${title}</summary>
-          <p class="description">${desc || 'لا يوجد شرح.'}</p>
-          ${generateInputRow(title)}
-          ${generateInputRow(title)}
-          ${generateInputRow(title)}
-        </details>
-      `;
-      formArea.appendChild(details);
-
-      // إعادة تعيين الحقول
-      document.getElementById('sectionTitleInput').value = '';
-      document.getElementById('sectionDescInput').value = '';
-    }
-  </script>
+  <!-- انسخ وكرر هذا الجزء لباقي البنود -->
 
 </body>
 </html>
