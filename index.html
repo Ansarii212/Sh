@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>نموذج تقييم الأدلة</title>
+  <title>نموذج الشواهد التعليمية للمعلمين </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -123,13 +123,6 @@
       font-weight: bold;
     }
 
-    .arrow-buttons {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 10px;
-  justify-content: center;
-}
 
 .arrow-label {
   font-size: 14px;
@@ -159,10 +152,10 @@
 </head>
 <body>
   <div class="top-bar no-print">
-    <a href="https://ansarii212.github.io/Cert/" target="_blank">العودة للصفحة الرئيسية</a>
+    <a href="https://ansarii212.github.io/Master/" target="_blank">العودة للصفحة الرئيسية</a>
   </div>
 
-  <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
+  <h1 style="text-align:center;">نموذج الشواهد التعليمية للمعلمين  </h1>
 
   <!-- Teacher Info Box -->
   <div class="teacher-info container">
@@ -177,16 +170,14 @@
       <input type="file" accept="image/*" onchange="handleTeacherPhoto(this)">
     </label>
   </div>
-
-  <div id="form-area"></div>
 <div class="arrow-buttons">
-  <button class="arrow-button" onclick="scrollToInput(1)">↓</button>
   <span class="arrow-label">اضغط السهم لإضافة الشواهد</span>
 </div>
 
+  <div id="form-area"></div>
   <!-- توقيع المعلم -->
   <div class="container">
-    <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
+    <label>توقيع المعلم/ة (كتابة): <input type="text" id="teacherSignText"></label>
     <label>رفع صورة التوقيع:
       <input type="file" accept="image/*" onchange="handleSignature(this)">
     </label>
@@ -195,7 +186,7 @@
 
   <!-- Buttons -->
   <div class="no-print button-row">
-    <button onclick="openReport()">صفحة الإنجاز</button>
+    <button onclick="openReport()">ملف الشواهد التعليمية  </button>
     <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
   </div>
 
@@ -344,7 +335,7 @@
           <h1 style="text-align:center;">صفحة الإنجاز</h1>
           <div class="teacher-head">
             <div class="teacher-details">
-              <strong>اسم المعلم:</strong> ${document.getElementById("teacherName").value}<br/>
+              <strong>اسم المعلم/ة:</strong> ${document.getElementById("teacherName").value}<br/>
               <strong>التخصص:</strong> ${document.getElementById("teacherMajor").value}<br/>
               <strong>رقم الهوية:</strong> ${document.getElementById("teacherID").value}<br/>
               <strong>تاريخ الميلاد:</strong> ${document.getElementById("teacherBirth").value}<br/>
@@ -373,7 +364,7 @@
 
       reportWindow.document.write(`
         <hr>
-        <h3>توقيع المعلم:</h3>
+        <h3>توقيع المعلم/ة:</h3>
         <p>${document.getElementById("teacherSignText").value}</p>
         ${teacherSignature ? `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;">` : ''}
         <div class="button-row">
