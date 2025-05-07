@@ -52,16 +52,12 @@
       border: 1px solid #ccc;
     }
     .input-row {
+      display: flex;
+      align-items: center;
       margin: 10px 0;
     }
-    .input-row input[type="file"],
-    .input-row input[type="text"] {
-      display: block;
-      margin-top: 5px;
-      padding: 8px;
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+    .input-row input[type="file"] {
+      margin-left: 10px;
     }
     .preview {
       font-size: 14px;
@@ -151,6 +147,7 @@
 
   <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
+  <!-- Teacher Info Box -->
   <div class="teacher-info container">
     <img id="teacherPhotoPreview" class="teacher-photo" alt="صورة المعلم" />
     <label>اسم المعلم: <input type="text" id="teacherName"></label>
@@ -166,6 +163,7 @@
 
   <div id="form-area"></div>
 
+  <!-- توقيع المعلم -->
   <div class="container">
     <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
     <label>رفع صورة التوقيع:
@@ -174,6 +172,7 @@
     <div class="preview" id="signaturePreview"></div>
   </div>
 
+  <!-- Buttons -->
   <div class="no-print button-row">
     <button onclick="openReport()">صفحة الإنجاز</button>
     <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
@@ -194,6 +193,8 @@
       details.innerHTML = `
         <details>
           <summary>${sectionTitle}</summary>
+          <label>الوصف:</label>
+          <input type="text" id="description-${i}" placeholder="أدخل وصف للبند ${i}" />
           <p class="description">شرح توضيحي للبند ${i}.</p>
           ${generateInputRow(sectionTitle)}
           ${generateInputRow(sectionTitle)}
@@ -204,33 +205,22 @@
     }
 
     function generateInputRow(section) {
-      const index = Date.now() + Math.random();
       return `
         <div class="input-row">
-          <input type="text" placeholder="عنوان الصورة" class="img-title">
-          <input type="text" placeholder="وصف الصورة" class="img-desc">
-          <input type="file" accept="image/*" onchange="handleImage(this, '${section}', ${index})" />
+          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
         </div>
-        <div class="preview" id="preview-${index}"></div>
+        <div class="preview"></div>
       `;
     }
 
-    function handleImage(input, section, index) {
-      const title = input.parentElement.querySelector('.img-title').value;
-      const desc = input.parentElement.querySelector('.img-desc').value;
-      const previewDiv = document.getElementById(`preview-${index}`);
+    function handleImage(input, section) {
       const file = input.files[0];
-
+      const previewDiv = input.parentElement.nextElementSibling;
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          uploadedImages[section].push({
-            name: file.name,
-            data: e.target.result,
-            title: title,
-            desc: desc
-          });
-          previewDiv.innerHTML = `تم رفع: <b>${title || file.name}</b>`;
+          uploadedImages[section].push({ name: file.name, data: e.target.result });
+          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
         };
         reader.readAsDataURL(file);
       }
@@ -276,82 +266,51 @@
             }
             .image-row {
               display: flex;
-              flex-wrap: wrap;
+              justify-content: space-between;
               gap: 15px;
               margin-top: 10px;
               margin-bottom: 40px;
             }
-            .image-box {
+            .image-row img {
               width: 32%;
-              max-height: 350px;
-              page-break-inside: avoid;
-              background-color: #fefefe;
-              padding: 10px;
-              border-radius: 10px;
-              border: 1px solid #ccc;
-            }
-            .image-box img {
-              width: 100%;
-              height: auto;
+              max-height: 250px;
               object-fit: contain;
-              border: 2px solid #ccc;
-              border-radius: 5px;
-            }
-            .image-box .title {
-              font-weight: bold;
-              margin-top: 5px;
-              font-size: 14px;
-            }
-            .image-box .desc {
-              font-size: 13px;
-              color: #555;
+              border: 4px solid #ffd700;
+              border-radius: 10px;
+              background-color: #3e2723;
+              padding: 10px;
+              page-break-inside: avoid;
             }
           </style>
         </head>
         <body>
-          <h1 style="text-align:center;">صفحة الإنجاز</h1>
-          <div class="teacher-head">
-            <div class="teacher-details">
-              <strong>اسم المعلم:</strong> ${document.getElementById("teacherName").value}<br/>
-              <strong>التخصص:</strong> ${document.getElementById("teacherMajor").value}<br/>
-              <strong>رقم الهوية:</strong> ${document.getElementById("teacherID").value}<br/>
-              <strong>تاريخ الميلاد:</strong> ${document.getElementById("teacherBirth").value}<br/>
-              <strong>المدرسة:</strong> ${document.getElementById("teacherSchool").value}<br/>
-              <strong>سنوات الخبرة:</strong> ${document.getElementById("teacherExp").value}<br/>
-            </div>
-            <div class="teacher-photo-box">
-              <img src="${teacherPhoto}" alt="صورة المعلم" style="width:200px; height:200px; object-fit:cover; border:2px solid #ccc; border-radius:10px;">
-            </div>
+          <h1 style="text-align:center;">التقرير النهائي</h1>
+          <div class="container">
+            <h2>معلومات المعلم</h2>
+            <img src="${teacherPhoto}" alt="صورة المعلم" style="width: 150px; height: 150px; border: 3px solid #f8b500; border-radius: 10px;" />
+            <p>اسم المعلم: <b>${document.getElementById('teacherName').value}</b></p>
+            <p>التخصص: <b>${document.getElementById('teacherMajor').value}</b></p>
+            <p>رقم الهوية: <b>${document.getElementById('teacherID').value}</b></p>
+            <p>تاريخ الميلاد: <b>${document.getElementById('teacherBirth').value}</b></p>
+            <p>المدرسة: <b>${document.getElementById('teacherSchool').value}</b></p>
+            <p>سنوات الخبرة: <b>${document.getElementById('teacherExp').value}</b></p>
+            <p>التوقيع: <img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;" alt="التوقيع"></p>
           </div>
+
+          <h2>الأدلة والوثائق</h2>
+          ${Object.keys(uploadedImages).map(section => `
+            <div class="container">
+              <h3>${section}</h3>
+              ${uploadedImages[section].map(image => `
+                <div class="image-row">
+                  <img src="${image.data}" alt="${image.name}">
+                </div>
+              `).join('')}
+            </div>
+          `).join('')}
+        </body>
+        </html>
       `);
-
-      for (const section in uploadedImages) {
-        const images = uploadedImages[section];
-        if (images.length > 0) {
-          reportWindow.document.write(`<h2>${section}</h2><div class="image-row">`);
-          images.forEach(image => {
-            reportWindow.document.write(`
-              <div class="image-box">
-                <img src="${image.data}" alt="${image.name}" />
-                <div class="title">${image.title || ''}</div>
-                <div class="desc">${image.desc || ''}</div>
-              </div>
-            `);
-          });
-          reportWindow.document.write(`</div>`);
-        }
-      }
-
-      reportWindow.document.write(`
-        <hr>
-        <h3>توقيع المعلم:</h3>
-        <p>${document.getElementById("teacherSignText").value}</p>
-        ${teacherSignature ? `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;">` : ''}
-        <div class="button-row">
-          <button onclick="window.print()">طباعة</button>
-        </div>
-      </body></html>`);
-      reportWindow.document.close();
     }
   </script>
 </body>
