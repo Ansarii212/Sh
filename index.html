@@ -18,21 +18,32 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
       margin-bottom: 20px;
     }
-    details {
-      background: #fff7e6;
-      border: 2px dashed #f1a00d;
+    .teacher-info {
+      background: #fff;
+      border: 2px solid #f8b500;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .teacher-photo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 3px solid #f8b500;
       border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 10px;
+      background-color: #eee;
     }
-    summary {
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .description {
+    .teacher-info input {
+      display: block;
       margin: 10px 0;
-      color: #444;
+      padding: 8px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
     .input-row {
       display: flex;
@@ -60,14 +71,17 @@
     button:hover {
       background-color: #e68a00;
     }
-    .report-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      background-color: #3e2723;
-      border: 4px solid #ffd700;
+    details {
+      background: #fff7e6;
+      border: 2px dashed #f1a00d;
       border-radius: 10px;
-      padding: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+    summary {
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
     }
     .image-row {
       display: flex;
@@ -76,7 +90,7 @@
       margin-bottom: 20px;
     }
     .image-row img {
-      width: 32%;  /* لتناسب الصور في الصفحة بشكل أفقي */
+      width: 32%;
       height: auto;
       object-fit: contain;
       background-color: #3e2723;
@@ -84,15 +98,10 @@
       border-radius: 10px;
       padding: 10px;
     }
-    .report-section {
-      margin-bottom: 30px;
-    }
     .button-row {
       text-align: center;
       margin-top: 30px;
     }
-
-    /* تحسين للطباعة */
     @media print {
       @page {
         size: A4;
@@ -101,22 +110,11 @@
       body {
         background: white !important;
       }
-      .button-row, .no-print {
+      .no-print {
         display: none !important;
       }
-      .image-row {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
       .image-row img {
-        width: 30%;  /* تقليل حجم الصور لتناسب العرض */
-        max-width: 100%;
         page-break-inside: avoid;
-      }
-      .page-break {
-        page-break-after: always;
       }
     }
   </style>
@@ -124,15 +122,42 @@
 <body>
   <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
+  <!-- Teacher Info Box -->
+  <div class="teacher-info container">
+    <img id="teacherPhotoPreview" class="teacher-photo" alt="صورة المعلم" />
+    <label>اسم المعلم: <input type="text" id="teacherName"></label>
+    <label>التخصص: <input type="text" id="teacherMajor"></label>
+    <label>رقم الهوية: <input type="text" id="teacherID"></label>
+    <label>تاريخ الميلاد: <input type="date" id="teacherBirth"></label>
+    <label>المدرسة: <input type="text" id="teacherSchool"></label>
+    <label>سنوات الخبرة: <input type="number" id="teacherExp"></label>
+    <label>رفع صورة المعلم:
+      <input type="file" accept="image/*" onchange="handleTeacherPhoto(this)">
+    </label>
+  </div>
+
   <div id="form-area"></div>
 
-  <div class="no-print" style="text-align:center;">
+  <!-- توقيع المعلم -->
+  <div class="container">
+    <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
+    <label>رفع صورة التوقيع:
+      <input type="file" accept="image/*" onchange="handleSignature(this)">
+    </label>
+    <div class="preview" id="signaturePreview"></div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="no-print button-row">
     <button onclick="openReport()">صفحة الإنجاز</button>
+    <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
   </div>
 
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
+    let teacherPhoto = '';
+    let teacherSignature = '';
 
     for (let i = 1; i <= 11; i++) {
       const sectionTitle = `البند رقم ${i}`;
@@ -174,6 +199,30 @@
       }
     }
 
+    function handleTeacherPhoto(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          teacherPhoto = e.target.result;
+          document.getElementById('teacherPhotoPreview').src = teacherPhoto;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleSignature(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          teacherSignature = e.target.result;
+          document.getElementById('signaturePreview').innerHTML = `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px; margin-top:10px;" alt="التوقيع">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
     function openReport() {
       const reportWindow = window.open('', '_blank');
       reportWindow.document.write(`
@@ -187,12 +236,6 @@
               padding: 20px;
               background-color: #fff7e6;
               direction: rtl;
-            }
-            h2 {
-              color: #c67800;
-              margin-top: 30px;
-              border-bottom: 1px solid #ccc;
-              padding-bottom: 5px;
             }
             .image-row {
               display: flex;
@@ -215,65 +258,73 @@
               text-align: center;
               margin-top: 30px;
             }
-            button {
-              background-color: #ff9900;
-              border: none;
-              color: white;
-              padding: 10px 20px;
-              border-radius: 8px;
-              font-size: 16px;
-              cursor: pointer;
-              margin: 5px;
+            .teacher-head {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 20px;
             }
-            button:hover {
-              background-color: #e68a00;
+            .teacher-photo-box {
+              width: 100px;
+              height: 100px;
+              border: 3px solid #f8b500;
+              border-radius: 10px;
+              overflow: hidden;
+              background-color: #eee;
+            }
+            .teacher-photo-box img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            .teacher-details {
+              width: 80%;
+              line-height: 1.8;
+              color: #333;
             }
             @media print {
-              @page {
-                size: A4;
-                margin: 20mm;
-              }
-              .button-row {
-                display: none !important;
-              }
-              .image-row img {
-                page-break-inside: avoid;
-              }
-              .page-break {
-                page-break-after: always;
-              }
+              .button-row { display: none; }
             }
           </style>
         </head>
         <body>
           <h1 style="text-align:center;">صفحة الإنجاز</h1>
+          <div class="teacher-head">
+            <div class="teacher-details">
+              <strong>اسم المعلم:</strong> ${document.getElementById("teacherName").value}<br/>
+              <strong>التخصص:</strong> ${document.getElementById("teacherMajor").value}<br/>
+              <strong>رقم الهوية:</strong> ${document.getElementById("teacherID").value}<br/>
+              <strong>تاريخ الميلاد:</strong> ${document.getElementById("teacherBirth").value}<br/>
+              <strong>المدرسة:</strong> ${document.getElementById("teacherSchool").value}<br/>
+              <strong>سنوات الخبرة:</strong> ${document.getElementById("teacherExp").value}<br/>
+            </div>
+            <div class="teacher-photo-box">
+              <img src="${teacherPhoto}" alt="صورة المعلم">
+            </div>
+          </div>
       `);
-
-      let count = 0;
 
       for (const section in uploadedImages) {
         const images = uploadedImages[section];
         if (images.length > 0) {
-          reportWindow.document.write(`<div class="report-section"><h2>${section}</h2><div class="image-row">`);
+          reportWindow.document.write(`<h2>${section}</h2><div class="image-row">`);
           images.forEach(image => {
             reportWindow.document.write(`<img src="${image.data}" alt="${image.name}" />`);
-            count++;
-            if (count % 3 === 0) {
-              reportWindow.document.write(`</div><div class="page-break"></div><div class="image-row">`);
-            }
           });
-          reportWindow.document.write(`</div></div>`);
+          reportWindow.document.write(`</div>`);
         }
       }
 
       reportWindow.document.write(`
-          <div class="button-row">
-            <button onclick="window.print()">طباعة</button>
-            <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
-          </div>
-        </body>
-        </html>
-      `);
+        <hr>
+        <h3>توقيع المعلم:</h3>
+        <p>${document.getElementById("teacherSignText").value}</p>
+        ${teacherSignature ? `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;">` : ''}
+        <div class="button-row">
+          <button onclick="window.print()">طباعة</button>
+          <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
+        </div>
+      </body></html>`);
       reportWindow.document.close();
     }
   </script>
