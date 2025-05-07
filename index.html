@@ -177,21 +177,7 @@
     <button onclick="openReport()">صفحة الإنجاز</button>
     <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
   </div>
-<script>
-window.onload = function() {
-  let titles = JSON.parse(localStorage.getItem("editedTitles")) || {};
-  for (let itemId in titles) {
-    let container = document.getElementById("titleContainer_" + itemId);
-    if (container) {
-      container.innerText = titles[itemId];
-      container.style.fontWeight = "bold";
-      container.style.fontSize = "18px";
-      container.style.marginBottom = "5px";
-      container.style.color = "#333";
-    }
-  }
-};
-</script>
+ 
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
@@ -238,17 +224,20 @@ for (let i = 1; i <= 11; i++) {
       `;
     }
 
-    function openReport() {
-  // اجلب قيمة الإعلان
-  var announcement = document.getElementById("announcementInput").value;
-
-  // اخفِ النموذج وأظهر صفحة الإنجاز
-  document.getElementById("formPage").style.display = "none";
-  document.getElementById("reportPage").style.display = "block";
-
-  // اعرض الإعلان في صفحة الإنجاز
-  document.getElementById("announcementTitle").textContent = announcement;
+    function loadEditedTitles() {
+  let titles = JSON.parse(localStorage.getItem("editedTitles")) || {};
+  for (let itemId in titles) {
+    let container = document.getElementById("titleContainer_" + itemId);
+    if (container) {
+      container.innerText = titles[itemId];
+      container.style.fontWeight = "bold";
+      container.style.fontSize = "18px";
+      container.style.marginBottom = "5px";
+      container.style.color = "#333";
+    }
+  }
 }
+    
 
     function handleImage(input, section) {
       const file = input.files[0];
