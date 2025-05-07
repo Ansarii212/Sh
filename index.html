@@ -184,71 +184,61 @@
     let teacherPhoto = '';
     let teacherSignature = '';
 
-    for (let i = 1; i <= 11; i++) {
-      const sectionTitle = `البند رقم ${i}`;
-      uploadedImages[sectionTitle] = [];
+    const itemsCount = 11;
 
-      const details = document.createElement('div');
-      details.className = 'container';
-      details.innerHTML = `
-        <details>
-          <summary>${sectionTitle}</summary>
-          <p class="description">شرح توضيحي للبند ${i}.</p>
-          ${generateInputRow(sectionTitle)}
-          ${generateInputRow(sectionTitle)}
-          ${generateInputRow(sectionTitle)}
-        </details>
-      `;
-      formArea.appendChild(details);
+    function createEditor() {
+      const editor = document.getElementById("editor");
+      for (let i = 1; i <= itemsCount; i++) {
+        const titleKey = `title_${i}`;
+        const descKey = `desc_${i}`;
+        const savedTitle = localStorage.getItem(titleKey) || `البند ${i}`;
+        const savedDesc = localStorage.getItem(descKey) || "";
+
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <label>عنوان البند ${i}:</label>
+          <input type="text" id="${titleKey}" value="${savedTitle}">
+          <label>الشرح:</label>
+          <textarea id="${descKey}">${savedDesc}</textarea>
+        `;
+        editor.appendChild(div);
+      }
     }
 
-    function generateInputRow(section) {
-      return `
-        <div class="input-row">
-          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
-        </div>
-        <div class="preview"></div>
-      `;
+    function saveData() {
+      for (let i = 1; i <= itemsCount; i++) {
+        const title = document.getElementById(`title_${i}`).value;
+        const desc = document.getElementById(`desc_${i}`).value;
+        localStorage.setItem(`title_${i}`, title);
+        localStorage.setItem(`desc_${i}`, desc);
+      }
+      alert("تم حفظ البيانات!");
     }
 
-// دالة لتعديل العناوين
-function updateTitles() {
-  // العناوين الجديدة
-  const newTitles = [
-    "الدورات",
-    "الشواهد",
-    "الصور",
-    "الحفلات",
-    "توزيع المنهج",
-    "الدورات",
-    "الشواهد",
-    "الصور",
-    "الحفلات",
-    "توزيع المنهج",
-    "النتيجة"
-  ];
+    createEditor();
 
   // حفظ العناوين في localStorage
-  let editedTitles = {};
-  for (let i = 1; i <= 11; i++) {
-    editedTitles[i] = newTitles[i - 1];
-  }
-  localStorage.setItem("editedTitles", JSON.stringify(editedTitles));
+  
+const itemsCount = 11;
 
-  // تطبيق العناوين على الصفحة
-  let titles = JSON.parse(localStorage.getItem("editedTitles")) || {};
-  for (let itemId in titles) {
-    let container = document.getElementById("titleContainer_" + itemId);
-    if (container) {
-      container.innerText = titles[itemId];
-      container.style.fontWeight = "bold";
-      container.style.fontSize = "18px";
-      container.style.marginBottom = "5px";
-      container.style.color = "#333";
+    function renderItems() {
+      const container = document.getElementById("output");
+      for (let i = 1; i <= itemsCount; i++) {
+        const title = localStorage.getItem(`title_${i}`) || `البند ${i}`;
+        const desc = localStorage.getItem(`desc_${i}`) || "";
+
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <h3>${title}</h3>
+          <p>${desc}</p>
+        `;
+        container.appendChild(div);
+      }
     }
-  }
-}
 
+    renderItems();
 // تشغيل الدالة عند تحميل الصفحة
 window.onload = function() {
   // تحديث العناوين عند تحميل الصفحة
