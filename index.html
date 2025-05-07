@@ -132,6 +132,25 @@
   border-radius: 5px;
   font-family: 'Cairo', sans-serif;
 }
+
+    .button-row {
+  background-color: #f5f5dc; /* بيج */
+  color: #333; /* لون الخط واضح */
+  border: 2px solid gold; /* بوردر ذهبي */
+  padding: 12px 24px; /* حجم الزر أكبر */
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-row:hover {
+  background-color: gold;
+  color: white;
+  border-color: #d4af37; /* لون ذهبي غامق أثناء التحويم */
+}
     @media print {
       @page {
         size: A4;
@@ -206,7 +225,7 @@
       container.innerHTML = `
         <details>
           <summary>
-            <input type="text" placeholder=" مثال : الدورات .. توزيع المنهج .. وهكذا" id="title-${sectionId}" style="font-size:18px; font-weight:bold; width:100%; padding:5px; border-radius:5px; border:1px solid #ccc;">
+            <input type="text" placeholder=" ادخل عنوان مثال : الدورات .. توزيع المنهج .. " id="title-${sectionId}" style="font-size:18px; font-weight:bold; width:100%; padding:5px; border-radius:5px; border:1px solid #ccc;">
           </summary>
           <p class="description">ارفع ثلاث صور تعبر من الشواهد متعلقة بالموضوع .</p>
           ${generateInputRow(sectionId)}
