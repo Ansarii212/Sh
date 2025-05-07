@@ -1,358 +1,221 @@
-<!-- النسخة الكاملة المحدثة تبدأ من هنا -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>نموذج تقييم الأدلة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <title>موقع خدمات المعلم</title>
   <style>
     body {
-      font-family: 'Cairo', sans-serif;
-      background-color: #5d4037;
-      padding: 20px;
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f0e6;
+      padding: 30px;
+      color: #5b3921;
       direction: rtl;
-      color: white;
     }
-    .container {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.2);
-      margin-bottom: 20px;
-      color: #000;
+
+    h1, input[type="text"] {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 10px;
+      color: #5b3921;
     }
-    .teacher-info {
-      background: #fff;
-      border: 2px solid #f8b500;
+
+    .description input[type="text"] {
+      font-size: 20px;
+      font-weight: normal;
+      text-align: center;
+      width: 100%;
+      border: none;
+      background: none;
+      color: #5b3921;
+    }
+
+    .section {
+      border: 3px solid #d2b48c;
       border-radius: 15px;
       padding: 20px;
-      margin-bottom: 30px;
-      position: relative;
+      margin-bottom: 25px;
+      background-color: #fffaf3;
     }
-    .teacher-photo {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border: 3px solid #f8b500;
-      border-radius: 10px;
-      background-color: #eee;
-    }
-    input, label {
-      color: #000;
-    }
-    .teacher-info input {
-      display: block;
-      margin: 10px 0;
-      padding: 8px;
+
+    .section h2 input[type="text"] {
+      font-size: 22px;
+      font-weight: bold;
       width: 100%;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    .input-row {
-      display: flex;
-      align-items: center;
-      margin: 10px 0;
-    }
-    .preview {
-      font-size: 14px;
-      color: green;
-      margin-top: 5px;
-    }
-    button {
-      background-color: #ff9900;
       border: none;
-      color: white;
-      padding: 12px 25px;
-      border-radius: 10px;
-      font-size: 18px;
-      cursor: pointer;
-      margin: 5px;
-      font-weight: bold;
+      background: none;
+      color: #5b3921;
+      text-align: center;
     }
-    button:hover {
-      background-color: #e68a00;
+
+    .section .description {
+      margin-bottom: 15px;
     }
-    details {
-      background: #fff7e6;
-      border: 2px dashed #f1a00d;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 10px;
-    }
-    summary {
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .image-row {
+
+    .buttons {
       display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
-    .image-row img {
-      width: 32%;
-      height: auto;
-      object-fit: contain;
-      background-color: #3e2723;
-      border: 4px solid #ffd700;
-      border-radius: 10px;
-      padding: 10px;
-    }
-    .button-row {
-      text-align: center;
-      margin-top: 30px;
-    }
-    .top-bar {
-      background-color: #3e2723;
-      padding: 10px;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .top-bar a {
+
+    .buttons button {
+      font-size: 18px;
+      padding: 12px 20px;
+      background-color: #d2b48c;
       color: white;
-      font-size: 20px;
-      text-decoration: none;
-      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      max-width: 300px;
     }
-    @media print {
-      @page {
-        size: A4;
-        margin: 15mm;
+
+    .buttons button:hover {
+      background-color: #b2956e;
+    }
+
+    @media (min-width: 600px) {
+      .buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
       }
-      body {
-        background: white !important;
-        color: black !important;
-      }
-      .no-print {
-        display: none !important;
-      }
-      .image-row img {
-        page-break-inside: avoid;
+
+      .buttons button {
+        flex: 1 1 calc(33% - 24px);
+        margin: 6px;
+        max-width: none;
       }
     }
   </style>
 </head>
 <body>
-  <div class="top-bar no-print">
-    <a href="https://ansarii212.github.io/Cert/" target="_blank">العودة للصفحة الرئيسية</a>
+  <h1><input type="text" value="موقع خدمات المعلم" /></h1>
+  <div class="description">
+    <input type="text" value="روابط مراجعات واختبارات نهائية للمرحلة الابتدائية والمتوسطة والثانوية" />
   </div>
 
-  <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
-
-  <!-- Teacher Info -->
-  <div class="teacher-info container">
-    <img id="teacherPhotoPreview" class="teacher-photo" alt="صورة المعلم" />
-    <label>اسم المعلم: <input type="text" id="teacherName"></label>
-    <label>التخصص: <input type="text" id="teacherMajor"></label>
-    <label>رقم الهوية: <input type="text" id="teacherID"></label>
-    <label>تاريخ الميلاد: <input type="date" id="teacherBirth"></label>
-    <label>المدرسة: <input type="text" id="teacherSchool"></label>
-    <label>سنوات الخبرة: <input type="number" id="teacherExp"></label>
-    <label>رفع صورة المعلم:
-      <input type="file" accept="image/*" onchange="handleTeacherPhoto(this)">
-    </label>
+  <!-- القسم 1 -->
+  <div class="section">
+    <h2><input type="text" value="المرحلة الابتدائية" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات نهائية للمرحلة الابتدائية" /></div>
+    <div class="buttons">
+      <button>الصف الأول الابتدائي</button>
+      <button>الصف الثاني الابتدائي</button>
+      <button>الصف الثالث الابتدائي</button>
+    </div>
   </div>
 
-  <div id="form-area"></div>
-
-  <!-- Teacher Signature -->
-  <div class="container">
-    <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
-    <label>رفع صورة التوقيع:
-      <input type="file" accept="image/*" onchange="handleSignature(this)">
-    </label>
-    <div class="preview" id="signaturePreview"></div>
+  <!-- القسم 2 -->
+  <div class="section">
+    <h2><input type="text" value="المرحلة المتوسطة" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات نهائية للمرحلة المتوسطة" /></div>
+    <div class="buttons">
+      <button>الصف الأول المتوسط</button>
+      <button>الصف الثاني المتوسط</button>
+      <button>الصف الثالث المتوسط</button>
+    </div>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="no-print button-row">
-    <button onclick="openReport()">صفحة الإنجاز</button>
-    <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
+  <!-- القسم 3 -->
+  <div class="section">
+    <h2><input type="text" value="المرحلة الثانوية" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات نهائية للمرحلة الثانوية" /></div>
+    <div class="buttons">
+      <button>الصف الأول الثانوي</button>
+      <button>الصف الثاني الثانوي</button>
+      <button>الصف الثالث الثانوي</button>
+    </div>
   </div>
 
-  <script>
-    const formArea = document.getElementById('form-area');
-    const uploadedImages = {};
-    let teacherPhoto = '';
-    let teacherSignature = '';
+  <!-- القسم 4 -->
+  <div class="section">
+    <h2><input type="text" value="اللغة الإنجليزية" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات اللغة الإنجليزية لجميع المراحل" /></div>
+    <div class="buttons">
+      <button>الابتدائي</button>
+      <button>المتوسط</button>
+      <button>الثانوي</button>
+    </div>
+  </div>
 
-    const commonDescription = "هذا الوصف ينطبق على كل البنود. يُرجى رفع الصور الداعمة لهذا البند من أعمال المعلم أو نماذج تطبيقية.";
+  <!-- القسم 5 -->
+  <div class="section">
+    <h2><input type="text" value="اللغة العربية" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات اللغة العربية لجميع المراحل" /></div>
+    <div class="buttons">
+      <button>الابتدائي</button>
+      <button>المتوسط</button>
+      <button>الثانوي</button>
+    </div>
+  </div>
 
-    for (let i = 1; i <= 11; i++) {
-      const sectionTitle = `البند رقم ${i}`;
-      uploadedImages[sectionTitle] = [];
+  <!-- القسم 6 -->
+  <div class="section">
+    <h2><input type="text" value="الرياضيات" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات الرياضيات لجميع المراحل" /></div>
+    <div class="buttons">
+      <button>الابتدائي</button>
+      <button>المتوسط</button>
+      <button>الثانوي</button>
+    </div>
+  </div>
 
-      const details = document.createElement('div');
-      details.className = 'container';
-      details.innerHTML = `
-        <details>
-          <summary>${sectionTitle}</summary>
-          <p class="description">${commonDescription}</p>
-          ${generateInputRow(sectionTitle)}
-          ${generateInputRow(sectionTitle)}
-          ${generateInputRow(sectionTitle)}
-        </details>
-      `;
-      formArea.appendChild(details);
-    }
+  <!-- القسم 7 -->
+  <div class="section">
+    <h2><input type="text" value="العلوم" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات العلوم لجميع المراحل" /></div>
+    <div class="buttons">
+      <button>الابتدائي</button>
+      <button>المتوسط</button>
+      <button>الثانوي</button>
+    </div>
+  </div>
 
-    function generateInputRow(section) {
-      return `
-        <div class="input-row">
-          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
-        </div>
-        <div class="preview"></div>
-      `;
-    }
+  <!-- القسم 8 -->
+  <div class="section">
+    <h2><input type="text" value="التربية الإسلامية" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات التربية الإسلامية لجميع المراحل" /></div>
+    <div class="buttons">
+      <button>الابتدائي</button>
+      <button>المتوسط</button>
+      <button>الثانوي</button>
+    </div>
+  </div>
 
-    function handleImage(input, section) {
-      const file = input.files[0];
-      const previewDiv = input.parentElement.nextElementSibling;
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedImages[section].push({ name: file.name, data: e.target.result });
-          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+  <!-- القسم 9 -->
+  <div class="section">
+    <h2><input type="text" value="التقنية والحاسب" /></h2>
+    <div class="description"><input type="text" value="مراجعات واختبارات التقنية والحاسب لجميع المراحل" /></div>
+    <div class="buttons">
+      <button>المتوسط</button>
+      <button>الثانوي</button>
+    </div>
+  </div>
 
-    function handleTeacherPhoto(input) {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          teacherPhoto = e.target.result;
-          document.getElementById('teacherPhotoPreview').src = teacherPhoto;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+  <!-- القسم 10 -->
+  <div class="section">
+    <h2><input type="text" value="الاختبارات المركزية" /></h2>
+    <div class="description"><input type="text" value="تجميعات ونماذج اختبارات مركزية لجميع المواد" /></div>
+    <div class="buttons">
+      <button>ابتدائي</button>
+      <button>متوسط</button>
+      <button>ثانوي</button>
+    </div>
+  </div>
 
-    function handleSignature(input) {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          teacherSignature = e.target.result;
-          document.getElementById('signaturePreview').innerHTML = `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px; margin-top:10px;" alt="التوقيع">`;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function openReport() {
-      const reportWindow = window.open('', '_blank');
-      reportWindow.document.write(`
-        <html lang="ar" dir="rtl">
-        <head>
-          <meta charset="UTF-8">
-          <title>صفحة الإنجاز</title>
-          <style>
-            body {
-              font-family: 'Cairo', sans-serif;
-              padding: 20px;
-              background-color: #fff7e6;
-              direction: rtl;
-              color: #333;
-            }
-            h1, h2, h3 { text-align: center; }
-            .teacher-head {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              margin-bottom: 20px;
-            }
-            .teacher-photo-box {
-              width: 200px;
-              height: 200px;
-              border: 3px solid #f8b500;
-              border-radius: 10px;
-              overflow: hidden;
-              background-color: #eee;
-            }
-            .teacher-photo-box img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-            }
-            .teacher-details {
-              width: 60%;
-              line-height: 1.8;
-            }
-            .image-row {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 15px;
-              margin: 10px 0 40px;
-            }
-            .image-row img {
-              width: 32%;
-              object-fit: contain;
-              border: 4px solid #ffd700;
-              border-radius: 10px;
-              background-color: #3e2723;
-              padding: 10px;
-              page-break-inside: avoid;
-            }
-            .button-row {
-              text-align: center;
-              margin-top: 30px;
-            }
-            @media print {
-              .button-row { display: none; }
-            }
-          </style>
-        </head>
-        <body>
-          <h1>صفحة الإنجاز</h1>
-          <div class="teacher-head">
-            <div class="teacher-details">
-              <strong>اسم المعلم:</strong> ${document.getElementById("teacherName").value}<br/>
-              <strong>التخصص:</strong> ${document.getElementById("teacherMajor").value}<br/>
-              <strong>رقم الهوية:</strong> ${document.getElementById("teacherID").value}<br/>
-              <strong>تاريخ الميلاد:</strong> ${document.getElementById("teacherBirth").value}<br/>
-              <strong>المدرسة:</strong> ${document.getElementById("teacherSchool").value}<br/>
-              <strong>سنوات الخبرة:</strong> ${document.getElementById("teacherExp").value}<br/>
-            </div>
-            <div class="teacher-photo-box">
-              <img src="${teacherPhoto}" alt="صورة المعلم">
-            </div>
-          </div>
-      `);
-
-      for (const section in uploadedImages) {
-        const images = uploadedImages[section];
-        if (images.length > 0) {
-          reportWindow.document.write(`<h2>${section}</h2><p>${commonDescription}</p><div class="image-row">`);
-          images.forEach(image => {
-            reportWindow.document.write(`<img src="${image.data}" alt="${image.name}" />`);
-          });
-          reportWindow.document.write(`</div>`);
-        }
-      }
-
-      reportWindow.document.write(`
-        <hr>
-        <h3>توقيع المعلم:</h3>
-        <p>${document.getElementById("teacherSignText").value}</p>
-        ${teacherSignature ? `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;">` : ''}
-        <div class="button-row">
-          <button onclick="window.print()">طباعة</button>
-          <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
-        </div>
-      </body></html>`);
-      reportWindow.document.close();
-    }
-  </script>
+  <!-- القسم 11 -->
+  <div class="section">
+    <h2><input type="text" value="الدعم الفني والمساعدة" /></h2>
+    <div class="description"><input type="text" value="للدعم الفني، تواصل معنا عبر الوسائل التالية" /></div>
+    <div class="buttons">
+      <button>واتساب</button>
+      <button>تلجرام</button>
+      <button>ايميل</button>
+    </div>
+  </div>
 </body>
 </html>
-<!-- نهاية النسخة -->
