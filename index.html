@@ -186,8 +186,8 @@
 
   <!-- Buttons -->
   <div class="no-print button-row">
-    <button onclick="openReport()">ملف الشواهد التعليمية  </button>
-    <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
+    <button onclick="openReport()">إصدار الملف    </button>
+    <button onclick="window.scrollTo(0,0)">إلى الأعلى </button>
   </div>
 
   <script>
@@ -206,9 +206,9 @@
       container.innerHTML = `
         <details>
           <summary>
-            <input type="text" placeholder="أدخل عنوان البند ${i}" id="title-${sectionId}" style="font-size:18px; font-weight:bold; width:100%; padding:5px; border-radius:5px; border:1px solid #ccc;">
+            <input type="text" placeholder=" مثال : الدورات .. توزيع المنهج .. وهكذا" id="title-${sectionId}" style="font-size:18px; font-weight:bold; width:100%; padding:5px; border-radius:5px; border:1px solid #ccc;">
           </summary>
-          <p class="description">شرح توضيحي للبند ${i}.</p>
+          <p class="description">ارفع ثلاث صور تعبر من الشواهد متعلقة بالموضوع .</p>
           ${generateInputRow(sectionId)}
           ${generateInputRow(sectionId)}
           ${generateInputRow(sectionId)}
@@ -368,7 +368,7 @@
         <p>${document.getElementById("teacherSignText").value}</p>
         ${teacherSignature ? `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;">` : ''}
         <div class="button-row">
-          <button onclick="window.print()">طباعة</button>
+          <button onclick="window.print()">طباعة الملف/ مشاركة pdf</button>
           <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
         </div>
       </body></html>`);
