@@ -177,44 +177,31 @@
     <button onclick="openReport()">صفحة الإنجاز</button>
     <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
   </div>
- 
+
   <script>
     const formArea = document.getElementById('form-area');
     const uploadedImages = {};
     let teacherPhoto = '';
     let teacherSignature = '';
 
-for (let i = 1; i <= 11; i++) {
-  const defaultTitle = `البند رقم ${i}`;
-  uploadedImages[defaultTitle] = [];
+    for (let i = 1; i <= 11; i++) {
+      const sectionTitle = `البند رقم ${i}`;
+      uploadedImages[sectionTitle] = [];
 
-  const details = document.createElement('div');
-  details.className = 'container';
+      const details = document.createElement('div');
+      details.className = 'container';
+      details.innerHTML = `
+        <details>
+          <summary>${sectionTitle}</summary>
+          <p class="description">شرح توضيحي للبند ${i}.</p>
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+        </details>
+      `;
+      formArea.appendChild(details);
+    }
 
-  const uniqueId = `section_${i}`;
-
-  details.innerHTML = `
-    <details>
-      <summary id="summary_${uniqueId}">${defaultTitle}</summary>
-      <label>مثال : الدورات
-        <input type="text" value="${defaultTitle}" oninput="updateSectionTitle('${uniqueId}', this.value)">
-      </label>
-      <p class="description">ارفع ثلاث صور مطلوبة تحت كل بند   ${i}.</p>
-      ${generateInputRow(defaultTitle)}
-      ${generateInputRow(defaultTitle)}
-      ${generateInputRow(defaultTitle)}
-    </details>
-  `;
-  formArea.appendChild(details);
-}
-
-    function updateSectionTitle(id, newTitle) {
-  const summaryEl = document.getElementById(`summary_${id}`);
-  if (summaryEl) {
-    summaryEl.textContent = newTitle;
-  }
-}
-    
     function generateInputRow(section) {
       return `
         <div class="input-row">
@@ -224,57 +211,6 @@ for (let i = 1; i <= 11; i++) {
       `;
     }
 
-    function loadEditedTitles() {
-  let titles = JSON.parse(localStorage.getItem("editedTitles")) || {};
-  for (let itemId in titles) {
-    let container = document.getElementById("titleContainer_" + itemId);
-    if (container) {
-      container.innerText = titles[itemId];
-      container.style.fontWeight = "bold";
-      container.style.fontSize = "18px";
-      container.style.marginBottom = "5px";
-      container.style.color = "#333";
-    }
-  }
-}
-    
-
-    function handleImage(input, section) {
-      const file = input.files[0];
-      const previewDiv = input.parentElement.nextElementSibling;
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedImages[section].push({ name: file.name, data: e.target.result });
-          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function handleTeacherPhoto(input) {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          teacherPhoto = e.target.result;
-          document.getElementById('teacherPhotoPreview').src = teacherPhoto;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function handleSignature(input) {
-      const file = input.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          teacherSignature = e.target.result;
-          document.getElementById('signaturePreview').innerHTML = `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px; margin-top:10px;" alt="التوقيع">`;
-        };
-        reader.readAsDataURL(<script>
-
-   
 // دالة لتعديل العناوين
 function updateTitles() {
   // العناوين الجديدة
@@ -319,7 +255,44 @@ window.onload = function() {
   updateTitles();
 };
 
-    
+
+    function handleImage(input, section) {
+      const file = input.files[0];
+      const previewDiv = input.parentElement.nextElementSibling;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImages[section].push({ name: file.name, data: e.target.result });
+          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleTeacherPhoto(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          teacherPhoto = e.target.result;
+          document.getElementById('teacherPhotoPreview').src = teacherPhoto;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleSignature(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          teacherSignature = e.target.result;
+          document.getElementById('signaturePreview').innerHTML = `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px; margin-top:10px;" alt="التوقيع">`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
     function openReport() {
       const reportWindow = window.open('', '_blank');
       reportWindow.document.write(`
