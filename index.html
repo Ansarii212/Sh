@@ -70,9 +70,16 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin: 0 10px;
     }
     .button-row button:hover {
       background-color: #45a049;
+    }
+    .button-row button.back {
+      background-color: #2196F3;
+    }
+    .button-row button.back:hover {
+      background-color: #0b7dda;
     }
   </style>
 </head>
@@ -176,11 +183,17 @@
           </div>
 
           <div class="button-row">
-            <button onclick="downloadPDF()">تحميل التقرير PDF</button>
+            <button class="back" onclick="backToForm()">عودة للإضافة</button>
             <button onclick="window.print()">طباعة التقرير</button>
+            <button onclick="downloadPDF()">تحميل PDF</button>
           </div>
         </div>
       `;
+    }
+
+    function backToForm() {
+      document.getElementById("evaluationForm").reset();
+      document.getElementById("reportContainer").innerHTML = '';
     }
 
     function downloadPDF() {
