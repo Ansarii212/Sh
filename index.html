@@ -68,52 +68,58 @@
     const uploadedImages = {};
 
     for (let i = 1; i <= 11; i++) {
-      const sectionTitle = `البند رقم ${i}`;
-      uploadedImages[sectionTitle] = [];
+      const sectionKey = `البند رقم ${i}`;
+      uploadedImages[sectionKey] = [];
 
-      const details = document.createElement('div');
-      details.className = 'container';
-      details.innerHTML = `
-        <details>
-          <summary>${sectionTitle}</summary>
-          <p class="description">شرح توضيحي للبند ${i}.</p>
-          ${generateInputRow(sectionTitle, i)}
-        </details>
-      `;
-      formArea.appendChild(details);
-    }
+      const container = document.createElement('div');
+      container.className = 'container';
 
-    function generateInputRow(section, index) {
-      const inputId = `input-title-${index}`;
-      return `
-        <div class="input-row">
-          <input type="text" id="${inputId}" placeholder="اكتب عنوانًا للبند..." oninput="updateSectionTitle('${section}', '${inputId}')">
-        </div>
-        <div class="input-row">
-          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
-        </div>
-        <div class="preview"></div>
-      `;
-    }
+      const details = document.createElement('details');
+      const summary = document.createElement('summary');
+      summary.textContent = sectionKey;
+      summary.id = `summary-${i}`;
 
-    function updateSectionTitle(section, inputId) {
-      const newTitle = document.getElementById(inputId).value.trim();
-      const allSummaries = document.querySelectorAll('summary');
-      allSummaries.forEach(summary => {
-        if (summary.textContent === section && newTitle !== '') {
-          summary.textContent = newTitle;
-        } else if (summary.textContent !== section && newTitle === '') {
-          summary.textContent = section;
-        }
-      });
+      const description = document.createElement('p');
+      description.className = 'description';
+      description.textContent = `شرح توضيحي للبند ${i}.`;
+
+      const inputTitle = document.createElement('input');
+      inputTitle.type = 'text';
+      inputTitle.placeholder = 'اكتب عنوانًا للبند...';
+      inputTitle.className = 'input-row';
+      inputTitle.style.marginTop = '10px';
+      inputTitle.oninput = function () {
+        const newTitle = inputTitle.value.trim();
+        document.getElementById(`summary-${i}`).textContent = newTitle !== '' ? newTitle : sectionKey;
+      };
+
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.className = 'input-row';
+      fileInput.onchange = function () {
+        handleImage(this, sectionKey);
+      };
+
+      const preview = document.createElement('div');
+      preview.className = 'preview';
+
+      details.appendChild(summary);
+      details.appendChild(description);
+      details.appendChild(inputTitle);
+      details.appendChild(fileInput);
+      details.appendChild(preview);
+
+      container.appendChild(details);
+      formArea.appendChild(container);
     }
 
     function handleImage(input, section) {
       const file = input.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(e) {
-          const preview = input.closest('.input-row').nextElementSibling;
+        reader.onload = function (e) {
+          const preview = input.nextElementSibling;
           preview.innerHTML = `<img src="${e.target.result}" alt="صورة">`;
           uploadedImages[section].push(e.target.result);
         };
