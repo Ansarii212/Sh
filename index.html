@@ -184,67 +184,51 @@
     let teacherPhoto = '';
     let teacherSignature = '';
 
-    const itemsCount = 11;
+    for (let i = 1; i <= 11; i++) {
+  // استرجاع العنوان من localStorage أو وضع قيمة افتراضية
+  const customTitle = localStorage.getItem(`title_${i}`) || `البند ${i}`;
+  uploadedImages[customTitle] = [];
 
-    function createEditor() {
-      const editor = document.getElementById("editor");
-      for (let i = 1; i <= itemsCount; i++) {
-        const titleKey = `title_${i}`;
-        const descKey = `desc_${i}`;
-        const savedTitle = localStorage.getItem(titleKey) || `البند ${i}`;
-        const savedDesc = localStorage.getItem(descKey) || "";
+  const details = document.createElement('div');
+  details.className = 'container';
+  details.innerHTML = `
+    <h3 contenteditable="true" oninput="saveTitle(${i}, this.innerText)" style="color:#333; margin-bottom:5px;">
+      ${customTitle}
+    </h3>
+    <input type="text" placeholder="اكتب عنوان البند" onblur="saveTitle(${i}, this.value)">
+  `;
 
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `
-          <label>عنوان البند ${i}:</label>
-          <input type="text" id="${titleKey}" value="${savedTitle}">
-          <label>الشرح:</label>
-          <textarea id="${descKey}">${savedDesc}</textarea>
-        `;
-        editor.appendChild(div);
-      }
+  document.body.appendChild(details);
+}
+
+// دالة حفظ العنوان في localStorage وتحديث المفتاح
+function saveTitle(index, newTitle) {
+  const oldTitle = localStorage.getItem(`title_${index}`) || `البند ${index}`;
+  if (uploadedImages[newTitle] === undefined) {
+    uploadedImages[newTitle] = uploadedImages[oldTitle] || [];
+    delete uploadedImages[oldTitle];
+  }
+  localStorage.setItem(`title_${index}`, newTitle);
+}
+        <details>
+          <summary>${sectionTitle}</summary>
+          <p class="description">شرح توضيحي للبند ${i}.</p>
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+        </details>
+      `;
+      formArea.appendChild(details);
     }
 
-    function saveData() {
-      for (let i = 1; i <= itemsCount; i++) {
-        const title = document.getElementById(`title_${i}`).value;
-        const desc = document.getElementById(`desc_${i}`).value;
-        localStorage.setItem(`title_${i}`, title);
-        localStorage.setItem(`desc_${i}`, desc);
-      }
-      alert("تم حفظ البيانات!");
+    function generateInputRow(section) {
+      return `
+        <div class="input-row">
+          <input type="file" accept="image/*" onchange="handleImage(this, '${section}')" />
+        </div>
+        <div class="preview"></div>
+      `;
     }
-
-    createEditor();
-
-  // حفظ العناوين في localStorage
-  
-const itemsCount = 11;
-
-    function renderItems() {
-      const container = document.getElementById("output");
-      for (let i = 1; i <= itemsCount; i++) {
-        const title = localStorage.getItem(`title_${i}`) || `البند ${i}`;
-        const desc = localStorage.getItem(`desc_${i}`) || "";
-
-        const div = document.createElement("div");
-        div.className = "item";
-        div.innerHTML = `
-          <h3>${title}</h3>
-          <p>${desc}</p>
-        `;
-        container.appendChild(div);
-      }
-    }
-
-    renderItems();
-// تشغيل الدالة عند تحميل الصفحة
-window.onload = function() {
-  // تحديث العناوين عند تحميل الصفحة
-  updateTitles();
-};
-
 
     function handleImage(input, section) {
       const file = input.files[0];
