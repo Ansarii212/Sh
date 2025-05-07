@@ -1,210 +1,366 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <title>نموذج تقييم الأدلة</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>شهادة التقدير</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #6b4c3b;
-      color: white;
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      background-color: #5d4037;
+      padding: 20px;
       direction: rtl;
+      color: white;
     }
-
-    .certificate-container {
-      background-color: #f9f4ef;
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
       color: #000;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 30px;
-      border: 8px double #a67c52;
-      border-radius: 30px;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-      text-align: center;
+    }
+    .teacher-info {
+      background: #fff;
+      border: 2px solid #f8b500;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
       position: relative;
     }
-
-    .certificate-container h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
-      color: #6b4c3b;
+    .teacher-photo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 3px solid #f8b500;
+      border-radius: 10px;
+      background-color: #eee;
     }
-
-    .certificate-container p {
-      font-size: 20px;
+    input, label {
+      color: #000;
+    }
+    .teacher-info input {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
       margin: 10px 0;
     }
-
-    input[type="text"] {
-      padding: 10px;
-      font-size: 18px;
-      border-radius: 10px;
-      border: 2px solid #a67c52;
-      margin: 10px;
-      width: 80%;
-      max-width: 400px;
+    .input-row input[type="file"] {
+      margin-left: 10px;
     }
-
-    .buttons-container {
-      margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      align-items: center;
+    .preview {
+      font-size: 14px;
+      color: green;
+      margin-top: 5px;
     }
-
-    .buttons-container button {
-      background-color: #6b4c3b;
-      color: white;
+    button {
+      background-color: #ff9900;
       border: none;
+      color: white;
       padding: 12px 25px;
       border-radius: 10px;
       font-size: 18px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin: 5px;
+      font-weight: bold;
     }
-
-    .buttons-container button:hover {
-      background-color: #a67c52;
+    button:hover {
+      background-color: #e68a00;
     }
-
-    .share-icons {
-      margin-top: 20px;
+    details {
+      background: #fff7e6;
+      border: 2px dashed #f1a00d;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
     }
-
-    .share-icons a {
-      margin: 0 10px;
-      font-size: 24px;
-      color: #6b4c3b;
-      background-color: #fff;
-      padding: 10px;
-      border-radius: 50%;
-      display: inline-block;
-      text-decoration: none;
-      transition: transform 0.3s;
-    }
-
-    .share-icons a:hover {
-      transform: scale(1.2);
-    }
-
-    #itemInput {
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      display: none;
-    }
-
-    #itemInput.show {
-      display: inline-block;
-      opacity: 1;
-    }
-
-    #backBtn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background-color: #fff;
-      color: #6b4c3b;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 16px;
+    summary {
+      font-size: 20px;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
-
-    #backBtn:hover {
-      background-color: #e0c4a8;
+    .image-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 20px;
     }
-
-    @media (max-width: 600px) {
-      .certificate-container h1 {
-        font-size: 28px;
+    .image-row img {
+      width: 32%;
+      height: auto;
+      object-fit: contain;
+      background-color: #3e2723;
+      border: 4px solid #ffd700;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .button-row {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .top-bar {
+      background-color: #3e2723;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .top-bar a {
+      color: white;
+      font-size: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    @media print {
+      @page {
+        size: A4;
+        margin: 15mm;
       }
-
-      .certificate-container p {
-        font-size: 16px;
+      body {
+        background: white !important;
+        color: black !important;
       }
-
-      .buttons-container button {
-        font-size: 16px;
-        padding: 10px 20px;
+      .no-print {
+        display: none !important;
       }
-
-      input[type="text"] {
-        font-size: 16px;
-      }
-
-      #backBtn {
-        font-size: 14px;
-        padding: 6px 10px;
+      .image-row img {
+        page-break-inside: avoid;
       }
     }
   </style>
 </head>
 <body>
-  <div class="certificate-container">
-    <button id="backBtn" onclick="goHome()">الصفحة الرئيسية</button>
-    <h1>شهادة تقدير</h1>
-    <p>يسرنا أن نقدم هذه الشهادة لـ</p>
-    <input type="text" id="nameInput" placeholder="أدخل اسم الطالب" />
-    <p>وذلك تقديراً لـ</p>
-    
-    <div id="itemInputWrapper">
-      <button onclick="toggleItemInput()">عرض/إخفاء البند</button>
-      <input type="text" id="itemInput" placeholder="أدخل البند المستحق" />
-    </div>
+  <div class="top-bar no-print">
+    <a href="https://ansarii212.github.io/Cert/" target="_blank">العودة للصفحة الرئيسية</a>
+  </div>
 
-    <div class="buttons-container">
-      <button onclick="generateCertificate()">إنشاء الشهادة</button>
-    </div>
+  <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
-    <div class="share-icons">
-      <a href="https://www.youtube.com" target="_blank" onclick="openInApp(event, 'youtube')">يوتيوب</a>
-      <a href="https://x.com" target="_blank" onclick="openInApp(event, 'x')">X</a>
-    </div>
+  <!-- Teacher Info Box -->
+  <div class="teacher-info container">
+    <img id="teacherPhotoPreview" class="teacher-photo" alt="صورة المعلم" />
+    <label>اسم المعلم: <input type="text" id="teacherName"></label>
+    <label>التخصص: <input type="text" id="teacherMajor"></label>
+    <label>رقم الهوية: <input type="text" id="teacherID"></label>
+    <label>تاريخ الميلاد: <input type="date" id="teacherBirth"></label>
+    <label>المدرسة: <input type="text" id="teacherSchool"></label>
+    <label>سنوات الخبرة: <input type="number" id="teacherExp"></label>
+    <label>رفع صورة المعلم:
+      <input type="file" accept="image/*" onchange="handleTeacherPhoto(this)">
+    </label>
+  </div>
+
+  <div id="form-area"></div>
+
+  <!-- توقيع المعلم -->
+  <div class="container">
+    <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
+    <label>رفع صورة التوقيع:
+      <input type="file" accept="image/*" onchange="handleSignature(this)">
+    </label>
+    <div class="preview" id="signaturePreview"></div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="no-print button-row">
+    <button onclick="openReport()">صفحة الإنجاز</button>
+    <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
   </div>
 
   <script>
-    function goHome() {
-      window.location.href = "https://ansarii212.github.io/Cert/";
+    const formArea = document.getElementById('form-area');
+    const uploadedImages = {};
+    let teacherPhoto = '';
+    let teacherSignature = '';
+    const sectionTitles = [];
+
+    for (let i = 1; i <= 11; i++) {
+      const sectionId = `section-${i}`;
+      uploadedImages[sectionId] = [];
+
+      const container = document.createElement('div');
+      container.className = 'container';
+      container.innerHTML = `
+        <details>
+          <summary>
+            <input type="text" placeholder="أدخل عنوان البند ${i}" id="title-${sectionId}" style="font-size:18px; font-weight:bold; width:100%; padding:5px; border-radius:5px; border:1px solid #ccc;">
+          </summary>
+          <p class="description">شرح توضيحي للبند ${i}.</p>
+          ${generateInputRow(sectionId)}
+          ${generateInputRow(sectionId)}
+          ${generateInputRow(sectionId)}
+        </details>
+      `;
+      formArea.appendChild(container);
     }
 
-    function toggleItemInput() {
-      const input = document.getElementById("itemInput");
-      if (input.classList.contains("show")) {
-        input.classList.remove("show");
-        setTimeout(() => {
-          input.style.display = "none";
-        }, 600);
-      } else {
-        input.style.display = "inline-block";
-        setTimeout(() => {
-          input.classList.add("show");
-        }, 10);
+    function generateInputRow(sectionId) {
+      return `
+        <div class="input-row">
+          <input type="file" accept="image/*" onchange="handleImage(this, '${sectionId}')" />
+        </div>
+        <div class="preview"></div>
+      `;
+    }
+
+    function handleImage(input, sectionId) {
+      const file = input.files[0];
+      const previewDiv = input.parentElement.nextElementSibling;
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedImages[sectionId].push({ name: file.name, data: e.target.result });
+          previewDiv.innerHTML = `تم رفع: <b>${file.name}</b>`;
+        };
+        reader.readAsDataURL(file);
       }
     }
 
-    function openInApp(event, platform) {
-      event.preventDefault();
-      const links = {
-        youtube: "youtube://",
-        x: "twitter://"
-      };
-      window.location.href = links[platform] || "#";
+    function handleTeacherPhoto(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          teacherPhoto = e.target.result;
+          document.getElementById('teacherPhotoPreview').src = teacherPhoto;
+        };
+        reader.readAsDataURL(file);
+      }
     }
 
-    function generateCertificate() {
-      const name = document.getElementById("nameInput").value;
-      const item = document.getElementById("itemInput").value;
-      if (!name) {
-        alert("يرجى إدخال اسم الطالب");
-        return;
+    function handleSignature(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          teacherSignature = e.target.result;
+          document.getElementById('signaturePreview').innerHTML = `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px; margin-top:10px;" alt="التوقيع">`;
+        };
+        reader.readAsDataURL(file);
       }
-      alert(`تم إنشاء شهادة تقدير لـ ${name} تقديراً لـ ${item || '...'}`);
+    }
+
+    function openReport() {
+      const reportWindow = window.open('', '_blank');
+      reportWindow.document.write(`
+        <html lang="ar" dir="rtl">
+        <head>
+          <title>صفحة الإنجاز</title>
+          <meta charset="UTF-8" />
+          <style>
+            body {
+              font-family: 'Cairo', sans-serif;
+              padding: 20px;
+              background-color: #fff7e6;
+              direction: rtl;
+            }
+            .image-row {
+              display: flex;
+              justify-content: space-between;
+              gap: 15px;
+              margin-top: 10px;
+              margin-bottom: 40px;
+            }
+            .image-row img {
+              width: 32%;
+              max-height: 250px;
+              object-fit: contain;
+              border: 4px solid #ffd700;
+              border-radius: 10px;
+              background-color: #3e2723;
+              padding: 10px;
+              page-break-inside: avoid;
+            }
+            .button-row {
+              text-align: center;
+              margin-top: 30px;
+            }
+            .teacher-head {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 20px;
+            }
+            .teacher-photo-box {
+              width: 200px;
+              height: 200px;
+              border: 3px solid #f8b500;
+              border-radius: 10px;
+              overflow: hidden;
+              background-color: #eee;
+            }
+            .teacher-photo-box img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+            .teacher-details {
+              width: 60%;
+              line-height: 1.8;
+              color: #333;
+            }
+            a {
+              color: #1565c0;
+              text-decoration: underline;
+            }
+            @media print {
+              .button-row { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1 style="text-align:center;">صفحة الإنجاز</h1>
+          <div class="teacher-head">
+            <div class="teacher-details">
+              <strong>اسم المعلم:</strong> ${document.getElementById("teacherName").value}<br/>
+              <strong>التخصص:</strong> ${document.getElementById("teacherMajor").value}<br/>
+              <strong>رقم الهوية:</strong> ${document.getElementById("teacherID").value}<br/>
+              <strong>تاريخ الميلاد:</strong> ${document.getElementById("teacherBirth").value}<br/>
+              <strong>المدرسة:</strong> ${document.getElementById("teacherSchool").value}<br/>
+              <strong>سنوات الخبرة:</strong> ${document.getElementById("teacherExp").value}<br/>
+            </div>
+            <div class="teacher-photo-box">
+              <img src="${teacherPhoto}" alt="صورة المعلم">
+            </div>
+          </div>
+      `);
+
+      for (let i = 1; i <= 11; i++) {
+        const sectionId = `section-${i}`;
+        const titleInput = document.getElementById(`title-${sectionId}`);
+        const sectionTitle = titleInput && titleInput.value ? titleInput.value : `البند ${i}`;
+        const images = uploadedImages[sectionId];
+        if (images.length > 0) {
+          reportWindow.document.write(`<h2>${sectionTitle}</h2><div class="image-row">`);
+          images.forEach(image => {
+            reportWindow.document.write(`<img src="${image.data}" alt="${image.name}" />`);
+          });
+          reportWindow.document.write(`</div>`);
+        }
+      }
+
+      reportWindow.document.write(`
+        <hr>
+        <h3>توقيع المعلم:</h3>
+        <p>${document.getElementById("teacherSignText").value}</p>
+        ${teacherSignature ? `<img src="${teacherSignature}" style="width:150px; border:2px solid #ccc; border-radius:5px;">` : ''}
+        <div class="button-row">
+          <button onclick="window.print()">طباعة</button>
+          <button onclick="navigator.share ? navigator.share({ title: 'صفحة الإنجاز', url: window.location.href }) : alert('المشاركة غير مدعومة')">مشاركة</button>
+        </div>
+      </body></html>`);
+      reportWindow.document.close();
     }
   </script>
 </body>
