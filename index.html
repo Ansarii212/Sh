@@ -276,6 +276,48 @@ for (let i = 1; i <= 11; i++) {
       }
     }
 
+// العناوين الجديدة
+const newTitles = [
+  "الدورات",
+  "الشواهد",
+  "الصور",
+  "الحفلات",
+  "توزيع المنهج",
+  "الدورات",
+  "الشواهد",
+  "الصور",
+  "الحفلات",
+  "توزيع المنهج",
+  "النتيجة"
+];
+
+// حفظ العناوين في localStorage
+let editedTitles = {};
+for (let i = 1; i <= 11; i++) {
+  editedTitles[i] = newTitles[i - 1];
+}
+localStorage.setItem("editedTitles", JSON.stringify(editedTitles));
+
+// دالة لتطبيق العناوين على الصفحة
+function loadEditedTitles() {
+  let titles = JSON.parse(localStorage.getItem("editedTitles")) || {};
+  for (let itemId in titles) {
+    let container = document.getElementById("titleContainer_" + itemId);
+    if (container) {
+      container.innerText = titles[itemId];
+      container.style.fontWeight = "bold";
+      container.style.fontSize = "18px";
+      container.style.marginBottom = "5px";
+      container.style.color = "#333";
+    }
+  }
+}
+
+// تشغيل عند تحميل الصفحة
+window.onload = function() {
+  loadEditedTitles();
+};
+    
     function openReport() {
       const reportWindow = window.open('', '_blank');
       reportWindow.document.write(`
