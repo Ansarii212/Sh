@@ -1,3 +1,4 @@
+<!-- النسخة الكاملة المحدثة تبدأ من هنا -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -56,9 +57,6 @@
       align-items: center;
       margin: 10px 0;
     }
-    .input-row input[type="file"] {
-      margin-left: 10px;
-    }
     .preview {
       font-size: 14px;
       color: green;
@@ -95,6 +93,7 @@
       justify-content: space-between;
       gap: 15px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     .image-row img {
       width: 32%;
@@ -147,7 +146,7 @@
 
   <h1 style="text-align:center;">نموذج تقييم الأدلة</h1>
 
-  <!-- Teacher Info Box -->
+  <!-- Teacher Info -->
   <div class="teacher-info container">
     <img id="teacherPhotoPreview" class="teacher-photo" alt="صورة المعلم" />
     <label>اسم المعلم: <input type="text" id="teacherName"></label>
@@ -163,7 +162,7 @@
 
   <div id="form-area"></div>
 
-  <!-- توقيع المعلم -->
+  <!-- Teacher Signature -->
   <div class="container">
     <label>توقيع المعلم (كتابة): <input type="text" id="teacherSignText"></label>
     <label>رفع صورة التوقيع:
@@ -172,7 +171,7 @@
     <div class="preview" id="signaturePreview"></div>
   </div>
 
-  <!-- Buttons -->
+  <!-- Action Buttons -->
   <div class="no-print button-row">
     <button onclick="openReport()">صفحة الإنجاز</button>
     <button onclick="window.scrollTo(0,0)">عودة للإضافة</button>
@@ -184,34 +183,25 @@
     let teacherPhoto = '';
     let teacherSignature = '';
 
-    const descriptions = [
-  "يرجى إدخال البيانات بشكل دقيق في كل الحقول المخصصة. تأكد من استخدام الأزرار وفقًا للوظائف المطلوبة مثل حفظ البيانات أو مشاركتها.",
-  "الشهادة تحتوي على بيانات المستفيد، ويمكن تخصيصها حسب الحاجة. تأكد من ملء كل البيانات المطلوبة بشكل صحيح قبل إتمام العملية.",
-  "يرجى إدخال الاسم الكامل، التاريخ، والمعلومات الخاصة بالشخص المستفيد من الشهادة. تأكد من صحة البيانات المدخلة قبل تقديمها.",
-  "تعمل الأزرار على التحكم في وظائف الصفحة مثل: حفظ الشهادة، مشاركتها، أو حفظ QR Code.",
-  "يمكنك تحميل الشهادة بصيغة PDF أو حفظها كصورة حسب رغبتك. لا تنسى التحقق من إعدادات التنسيق قبل التحميل.",
-  "يمكنك إضافة فيديو مرئي إلى الشهادة لزيادة تفاعل المستخدمين. اختر الفيديو المناسب وتأكد من أنه يعمل بشكل صحيح.",
-  "يتم تصميم الشهادة بشكل زخرفي باستخدام ألوان وخطوط تناسب مختلف المناسبات. يمكنك تخصيص الشكل النهائي للشهادة بما يتناسب مع الحدث أو المناسبة.",
-  "يمكنك إضافة مؤقت إلى الشهادة لعرض مدة زمنية معينة أو تذكير بتنفيذ إجراء معين قبل نهاية الوقت المحدد.",
-  "يمكنك إضافة ميدالية تقدير أو شكر حسب رغبتك. يتم عرض الميداليات لتكريم الشخص الممنوحة له الشهادة.",
-  "تستطيع مشاركة الشهادة مع الآخرين عبر البريد الإلكتروني أو من خلال وسائل التواصل الاجتماعي مثل فيسبوك أو تويتر.",
-  "يمكنك العودة إلى الصفحة الرئيسية في أي وقت من خلال الضغط على الزر الموجود أعلى الشهادة. سيتم توجيهك مباشرة إلى بداية الصفحة."
-];
+    const commonDescription = "هذا الوصف ينطبق على كل البنود. يُرجى رفع الصور الداعمة لهذا البند من أعمال المعلم أو نماذج تطبيقية.";
 
-for (let i = 1; i <= 11; i++) {
-  const sectionTitle = `البند رقم ${i}`;
-  uploadedImages[sectionTitle] = [];
+    for (let i = 1; i <= 11; i++) {
+      const sectionTitle = `البند رقم ${i}`;
+      uploadedImages[sectionTitle] = [];
 
-  const details = document.createElement('div');
-  details.className = 'container';
-  details.innerHTML = `
-    <details>
-      <summary>${sectionTitle}</summary>
-      <p class="description">${descriptions[i - 1]}</p>
-    </details>
-  `;
-  formArea.appendChild(details);
-}
+      const details = document.createElement('div');
+      details.className = 'container';
+      details.innerHTML = `
+        <details>
+          <summary>${sectionTitle}</summary>
+          <p class="description">${commonDescription}</p>
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+          ${generateInputRow(sectionTitle)}
+        </details>
+      `;
+      formArea.appendChild(details);
+    }
 
     function generateInputRow(section) {
       return `
@@ -264,36 +254,17 @@ for (let i = 1; i <= 11; i++) {
       reportWindow.document.write(`
         <html lang="ar" dir="rtl">
         <head>
+          <meta charset="UTF-8">
           <title>صفحة الإنجاز</title>
-          <meta charset="UTF-8" />
           <style>
             body {
               font-family: 'Cairo', sans-serif;
               padding: 20px;
               background-color: #fff7e6;
               direction: rtl;
+              color: #333;
             }
-            .image-row {
-              display: flex;
-              justify-content: space-between;
-              gap: 15px;
-              margin-top: 10px;
-              margin-bottom: 40px;
-            }
-            .image-row img {
-              width: 32%;
-              max-height: 250px;
-              object-fit: contain;
-              border: 4px solid #ffd700;
-              border-radius: 10px;
-              background-color: #3e2723;
-              padding: 10px;
-              page-break-inside: avoid;
-            }
-            .button-row {
-              text-align: center;
-              margin-top: 30px;
-            }
+            h1, h2, h3 { text-align: center; }
             .teacher-head {
               display: flex;
               justify-content: space-between;
@@ -316,11 +287,25 @@ for (let i = 1; i <= 11; i++) {
             .teacher-details {
               width: 60%;
               line-height: 1.8;
-              color: #333;
             }
-            a {
-              color: #1565c0;
-              text-decoration: underline;
+            .image-row {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 15px;
+              margin: 10px 0 40px;
+            }
+            .image-row img {
+              width: 32%;
+              object-fit: contain;
+              border: 4px solid #ffd700;
+              border-radius: 10px;
+              background-color: #3e2723;
+              padding: 10px;
+              page-break-inside: avoid;
+            }
+            .button-row {
+              text-align: center;
+              margin-top: 30px;
             }
             @media print {
               .button-row { display: none; }
@@ -328,7 +313,7 @@ for (let i = 1; i <= 11; i++) {
           </style>
         </head>
         <body>
-          <h1 style="text-align:center;">صفحة الإنجاز</h1>
+          <h1>صفحة الإنجاز</h1>
           <div class="teacher-head">
             <div class="teacher-details">
               <strong>اسم المعلم:</strong> ${document.getElementById("teacherName").value}<br/>
@@ -347,7 +332,7 @@ for (let i = 1; i <= 11; i++) {
       for (const section in uploadedImages) {
         const images = uploadedImages[section];
         if (images.length > 0) {
-          reportWindow.document.write(`<h2>${section}</h2><div class="image-row">`);
+          reportWindow.document.write(`<h2>${section}</h2><p>${commonDescription}</p><div class="image-row">`);
           images.forEach(image => {
             reportWindow.document.write(`<img src="${image.data}" alt="${image.name}" />`);
           });
@@ -370,3 +355,4 @@ for (let i = 1; i <= 11; i++) {
   </script>
 </body>
 </html>
+<!-- نهاية النسخة -->
