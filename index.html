@@ -196,10 +196,10 @@ for (let i = 1; i <= 11; i++) {
   details.innerHTML = `
     <details>
       <summary id="summary_${uniqueId}">${defaultTitle}</summary>
-      <label>تعديل اسم البند:
+      <label>مثال : الدورات
         <input type="text" value="${defaultTitle}" oninput="updateSectionTitle('${uniqueId}', this.value)">
       </label>
-      <p class="description">شرح توضيحي للبند ${i}.</p>
+      <p class="description">ارفع ثلاث صور مطلوبة تحت كل بند   ${i}.</p>
       ${generateInputRow(defaultTitle)}
       ${generateInputRow(defaultTitle)}
       ${generateInputRow(defaultTitle)}
@@ -223,6 +223,18 @@ for (let i = 1; i <= 11; i++) {
         <div class="preview"></div>
       `;
     }
+
+    function openReport() {
+  // اجلب قيمة الإعلان
+  var announcement = document.getElementById("announcementInput").value;
+
+  // اخفِ النموذج وأظهر صفحة الإنجاز
+  document.getElementById("formPage").style.display = "none";
+  document.getElementById("reportPage").style.display = "block";
+
+  // اعرض الإعلان في صفحة الإنجاز
+  document.getElementById("announcementTitle").textContent = announcement;
+}
 
     function handleImage(input, section) {
       const file = input.files[0];
